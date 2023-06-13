@@ -4,17 +4,33 @@ import {
   CardHeader,
   HStack,
   Heading,
+  IconButton,
   Skeleton,
-  Spacer,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
+import { FaEdit } from "react-icons/fa";
+
+// LOGICS
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+
+// FEATURES
 import { device } from "../features/Interface";
 import axiosCloud, { ENDPOINT } from "../features/AxiosCloud";
 
+// COMPONENTS
+import { MapWindow } from "../components/MapWindow";
+import { DrawerForm } from "../components/DrawerForm";
+
 export const DevicePage = () => {
   const param = useParams();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedModal, setSelectedModal] = useState<string>();
+  const openDrawerForm = () => {
+    setSelectedModal("drawer");
+    onOpen();
+  };
 
   const [loading, setLoading] = useState<boolean>(true);
   const [singleDevice, setSingleDevice] = useState<device>();
@@ -30,12 +46,11 @@ export const DevicePage = () => {
         )
         .then((result) => {
           setSingleDevice(result.data);
-          console.log(singleDevice);
           setLoading(false);
         });
     } catch (error) {
       setLoading(false);
-      console.log(error);
+      throw error;
     }
   };
 
@@ -49,28 +64,68 @@ export const DevicePage = () => {
       <Card m={10}>
         <CardHeader>
           <HStack>
-            <Heading size="md">Contact detail</Heading>
+            <Heading size="md">{`${param.type} detail`}</Heading>
           </HStack>
         </CardHeader>
         <CardBody>
           <HStack>
-            <Text as={"b"}>id:</Text>
-            {loading ? (
-              <Skeleton height="15px" w={"100px"} />
-            ) : (
-              <Text fontSize="sm"> {singleDevice?.id}</Text>
-            )}
-            <Spacer />
             <Text as={"b"}>macAddress:</Text>
             {loading ? (
               <Skeleton height="15px" w={"100px"} />
             ) : (
               <Text fontSize="sm">{singleDevice?.macAddress}</Text>
             )}
-            <Spacer />
+            <Heading size="sm" m={2}>
+              Last position:
+            </Heading>
+            <Text as={"b"}>X:</Text>
+            {loading ? (
+              <Skeleton height="15px" w={"100px"} />
+            ) : (
+              <Text fontSize="sm"> {singleDevice?.positions[0].x}</Text>
+            )}
+            <Text as={"b"}>Y:</Text>
+            {loading ? (
+              <Skeleton height="15px" w={"100px"} />
+            ) : (
+              <Text fontSize="sm">{singleDevice?.positions[0].y}</Text>
+            )}
+            {singleDevice?.type == "anchor" ? (
+              <IconButton
+                icon={<FaEdit />}
+                aria-label={"edit"}
+                rounded={"3xl"}
+                onClick={() => openDrawerForm()}
+              />
+            ) : (
+              <></>
+            )}
           </HStack>
         </CardBody>
       </Card>
+      <Card w={"80%"} h={"60%"} m={10}>
+        <CardBody>
+          {singleDevice ? (
+            <MapWindow
+              deviceDetail={singleDevice}
+              setDeviceDetail={setSingleDevice}
+            />
+          ) : (
+            <></>
+          )}
+        </CardBody>
+      </Card>
+      {selectedModal == "drawer" && singleDevice ? (
+        <DrawerForm
+          isOpen={isOpen}
+          onOpen={onOpen}
+          onClose={onClose}
+          device={singleDevice}
+          getContact={getContact}
+        />
+      ) : (
+        <></>
+      )}
     </>
   );
 };

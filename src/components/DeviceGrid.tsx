@@ -5,12 +5,12 @@ import {
   HStack,
   Heading,
   IconButton,
-  Select,
+  Skeleton,
+  SkeletonCircle,
   Table,
   TableContainer,
   Tbody,
   Td,
-  Text,
   Th,
   Thead,
   Tr,
@@ -22,6 +22,7 @@ import { device } from "../features/Interface.tsx";
 import { useNavigate } from "react-router-dom";
 
 export const DeviceGrid = ({ type }: { type: string }) => {
+  const [loading, setLoading] = useState(true);
   const [deviceList, setDeviceList] = useState<device[]>();
   const navigate = useNavigate();
 
@@ -38,11 +39,8 @@ export const DeviceGrid = ({ type }: { type: string }) => {
       .get(type == "anchor" ? ENDPOINT.anchor : ENDPOINT.tag)
       .then((result) => {
         setDeviceList(result.data);
+        setLoading(false);
       });
-  };
-
-  const orderBy = () => {
-    console.log("modificare");
   };
 
   return (
@@ -53,13 +51,6 @@ export const DeviceGrid = ({ type }: { type: string }) => {
             <Heading size="xl" mr={"5%"}>
               {type == "anchor" ? "Anchor" : "Tag"}
             </Heading>
-            <Text as={"b"} minW={"20%"}>
-              Order by:
-            </Text>
-            <Select onChange={orderBy} size={"xs"}>
-              <option value="">---</option>
-              <option value="name">mac address</option>
-            </Select>
           </HStack>
         </CardHeader>
         <CardBody>
@@ -72,21 +63,36 @@ export const DeviceGrid = ({ type }: { type: string }) => {
                 </Tr>
               </Thead>
               <Tbody>
-                {deviceList?.map((device, index) => (
-                  <Tr key={index}>
-                    <Td>{device.macAddress}</Td>
+                {loading ? (
+                  <Tr>
                     <Td>
-                      <IconButton
-                        size={"xs"}
-                        shadow={"md"}
-                        borderRadius={"3xl"}
-                        icon={<FaSearch />}
-                        aria-label={"detail"}
-                        onClick={() => navigate(`${type}/${device.macAddress}`)}
-                      />
+                      <Skeleton height="20px" />
+                    </Td>
+                    <Td>
+                      <SkeletonCircle size="10" />
                     </Td>
                   </Tr>
-                ))}
+                ) : (
+                  <>
+                    {deviceList?.map((device, index) => (
+                      <Tr key={index}>
+                        <Td>{device.macAddress}</Td>
+                        <Td>
+                          <IconButton
+                            size={"xs"}
+                            shadow={"md"}
+                            borderRadius={"3xl"}
+                            icon={<FaSearch />}
+                            aria-label={"detail"}
+                            onClick={() =>
+                              navigate(`${type}/${device.macAddress}`)
+                            }
+                          />
+                        </Td>
+                      </Tr>
+                    ))}
+                  </>
+                )}
               </Tbody>
             </Table>
           </TableContainer>
