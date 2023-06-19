@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Box, Skeleton } from "@chakra-ui/react";
+import { Box, Skeleton, useToast, Text, Stack } from "@chakra-ui/react";
 
 // LEAFLEET
 import {
@@ -11,12 +11,13 @@ import {
 } from "react-leaflet";
 import L, { LatLng, LatLngBoundsExpression } from "leaflet";
 import "leaflet/dist/leaflet.css";
-import white from "../assets/white.png";
+import cartesiano from "../assets/white.png";
 import userIcon from "../assets/tagIcon.png";
 import sensorIcon from "../assets/sensorIcon.png";
 import axiosCloud, { ENDPOINT } from "../features/AxiosCloud";
 import { device, position } from "../features/Interface";
 import { Link } from "react-router-dom";
+import { AxiosError } from "axios";
 
 export const MapWindow = ({
   deviceDetail,
@@ -47,14 +48,25 @@ export const MapWindow = ({
       iconAnchor: [0, 0],
       popupAnchor: [18, 15],
     }),
-    image: white,
+    image: cartesiano,
     zoom: 1,
-    center: [9, 16],
+    center: [3, 4],
     imageBounds: [
       [0, 0],
-      [18, 32],
+      [7, 8],
     ],
   };
+
+  const getTimeFrequency = () => {
+    const timer = localStorage.getItem("refreshingTime");
+    if (timer) {
+      return parseInt(timer);
+    } else {
+      return 2000;
+    }
+  };
+
+  const toast = useToast();
 
   let tagPositionsList: LatLng[] = [];
 
@@ -63,7 +75,7 @@ export const MapWindow = ({
   const [tagList, setTagList] = useState<device[]>([]);
   const [anchorList, setAnchorList] = useState<device[]>([]);
 
-  // const [tagPositionsList, setTagPositionsList] = useState<LatLng[]>([]);
+  const [timer, setTimer] = useState(0);
 
   const getDevices = async () => {
     if (deviceDetail != null && setDeviceDetail != null) {
@@ -71,15 +83,47 @@ export const MapWindow = ({
         .get(deviceDetail.type + "/mac/" + deviceDetail.macAddress)
         .then((result) => {
           setDeviceDetail(result.data);
+          checkZeroPostitions(deviceDetail);
           setLoading(false);
+        })
+        .catch((error: AxiosError) => {
+          if (error.message == "Network Error") {
+            toast({
+              status: "error",
+              title: "Server Error",
+              variant: "solid",
+              duration: 3000,
+              isClosable: true,
+              position: "top-right",
+            });
+          }
         });
     } else {
-      await axiosCloud.get(ENDPOINT.tag).then((result) => {
-        setTagList(result.data);
-      });
+      await axiosCloud
+        .get(ENDPOINT.tag)
+        .then((result) => {
+          let resultFiltered: device[] = result.data;
+          resultFiltered = resultFiltered.filter((tag) => tag.positions[0]);
+          setTagList(resultFiltered);
+        })
+        .catch((error: AxiosError) => {
+          if (error.message == "Network Error") {
+            toast({
+              status: "error",
+              title: "Server Error",
+              variant: "solid",
+              duration: 3000,
+              isClosable: true,
+              position: "top-right",
+            });
+          }
+        });
       await axiosCloud.get(ENDPOINT.anchor).then((result) => {
         setAnchorList(result.data);
         setLoading(false);
+
+        const checked: device[] = result.data;
+        checked.map((anchor) => checkZeroPostitions(anchor));
       });
     }
   };
@@ -87,8 +131,13 @@ export const MapWindow = ({
   useEffect(() => {
     const interval = setInterval(() => {
       getDevices();
-    }, 5000);
+    }, getTimeFrequency());
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    getDevices();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -97,51 +146,54 @@ export const MapWindow = ({
       const newPos = new LatLng(positions[index].x, positions[index].y);
       tagPositionsList.push(newPos);
     }
-
-    // const localPositions = localStorage.getItem("positions");
-    // if (localPositions) {
-    //   const allPositions = JSON.parse(localPositions);
-    //   const jsonPositions = JSON.stringify([
-    //     ...allPositions,
-    //     new LatLng(pos.x, pos.y),
-    //   ]);
-    //   localStorage.setItem("positions", jsonPositions);
-    // } else {
-    //   const newPosition = JSON.stringify([new LatLng(pos.x, pos.y)]);
-    //   localStorage.setItem("positions", newPosition);
-    // }
   };
 
-  // const insertPolyLineBySingleTag = () => {
-  //   const localPositions = localStorage.getItem("positions");
-  //   if (localPositions) {
-  //     const allPositions = JSON.parse(localPositions);
-  //     if (localPositions[0]) {
-  //       return <Polyline positions={allPositions} />;
-  //     }
-  //   }
-  //   return <></>;
-  // };
+  const checkZeroPostitions = (device: device) => {
+    if (device.positions[0].x == 0 || device.positions[0].y == 0) {
+      toast({
+        status: "warning",
+        title: "Positions error",
+        description: `il ${device.type} ${device.macAddress} ha una posizione (x, y) che punta a 0, per favore dare un valore diverso da 0`,
+        variant: "solid",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (timer > 0) {
+        setTimer(timer - 1);
+      } else {
+        setTimer(getTimeFrequency() / 1000);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [timer]);
 
   return (
     <>
+      <Text textAlign={"right"}>Next Request: {timer} s</Text>
+
       {!loading ? (
         <MapContainer
           center={mapSettings.center}
           zoom={mapSettings.zoom}
           crs={mapSettings.crs}
-          minZoom={4.7}
+          minZoom={6.5}
           maxZoom={0}
           zoomSnap={0.0}
           dragging={false}
           //   doubleClickZoom={() => disable}
-          style={{ width: "100%", height: "100%" }}
+          style={{ width: "100%", height: "90%" }}
         >
           <ImageOverlay
             url={mapSettings.image}
             bounds={mapSettings.imageBounds}
           />
-          {deviceDetail != null ? (
+          {deviceDetail?.positions[0] ? (
             <Marker
               position={
                 new LatLng(
@@ -197,8 +249,12 @@ export const MapWindow = ({
           ))}
         </MapContainer>
       ) : (
-        <Skeleton height="100%" />
+        <Skeleton height="90%" />
       )}
+      <Stack>
+        <Box w={"100%"} h={"1px"} backgroundColor={"blackAlpha.700"}></Box>
+        <Text textAlign={"center"}>Y</Text>
+      </Stack>
     </>
   );
 };

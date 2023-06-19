@@ -8,6 +8,7 @@ import {
   Skeleton,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { FaEdit } from "react-icons/fa";
 
@@ -22,6 +23,7 @@ import axiosCloud, { ENDPOINT } from "../features/AxiosCloud";
 // COMPONENTS
 import { MapWindow } from "../components/MapWindow";
 import { DrawerForm } from "../components/DrawerForm";
+import { AxiosError } from "axios";
 
 export const DevicePage = () => {
   const param = useParams();
@@ -34,24 +36,31 @@ export const DevicePage = () => {
 
   const [loading, setLoading] = useState<boolean>(true);
   const [singleDevice, setSingleDevice] = useState<device>();
+  const toast = useToast();
 
   const getContact = async () => {
-    try {
-      setLoading(true);
-      await axiosCloud
-        .get(
-          param.type == "tag"
-            ? ENDPOINT.tag + "/mac/" + param.macAddress
-            : ENDPOINT.anchor + "/mac/" + param.macAddress
-        )
-        .then((result) => {
-          setSingleDevice(result.data);
-          setLoading(false);
-        });
-    } catch (error) {
-      setLoading(false);
-      throw error;
-    }
+    await axiosCloud
+      .get(
+        param.type == "tag"
+          ? ENDPOINT.tag + "/mac/" + param.macAddress
+          : ENDPOINT.anchor + "/mac/" + param.macAddress
+      )
+      .then((result) => {
+        setSingleDevice(result.data);
+        setLoading(false);
+      })
+      .catch((error: AxiosError) => {
+        if (error.message == "Network Error") {
+          toast({
+            status: "error",
+            title: "Server Error",
+            variant: "solid",
+            duration: 5000,
+            isClosable: true,
+            position: "top-right",
+          });
+        }
+      });
   };
 
   useEffect(() => {
@@ -61,34 +70,45 @@ export const DevicePage = () => {
 
   return (
     <>
-      <Card m={10}>
+      <Card w={"80%"}>
         <CardHeader>
           <HStack>
-            <Heading size="md">{`${param.type} detail`}</Heading>
+            <Heading size="md">
+              {param.type == "anchor" ? "Anchor Detail" : "Tag Detail"}
+            </Heading>
           </HStack>
         </CardHeader>
         <CardBody>
           <HStack>
-            <Text as={"b"}>macAddress:</Text>
+            <Text as={"b"}>Mac Address:</Text>
             {loading ? (
-              <Skeleton height="15px" w={"100px"} />
+              <Skeleton height="20px" w={"20%"} />
             ) : (
               <Text fontSize="sm">{singleDevice?.macAddress}</Text>
             )}
-            <Heading size="sm" m={2}>
+            <Text as={"b"} size="md" m={2}>
               Last position:
-            </Heading>
+            </Text>
             <Text as={"b"}>X:</Text>
             {loading ? (
-              <Skeleton height="15px" w={"100px"} />
+              <Skeleton height="15px" w={"20%"} />
             ) : (
-              <Text fontSize="sm"> {singleDevice?.positions[0].x}</Text>
+              <Text fontSize="sm">
+                {" "}
+                {singleDevice?.positions[0]
+                  ? `${singleDevice?.positions[0].x.toFixed(2)}`
+                  : "NaN"}
+              </Text>
             )}
             <Text as={"b"}>Y:</Text>
             {loading ? (
-              <Skeleton height="15px" w={"100px"} />
+              <Skeleton height="15px" w={"20%"} />
             ) : (
-              <Text fontSize="sm">{singleDevice?.positions[0].y}</Text>
+              <Text fontSize="sm">
+                {singleDevice?.positions[0]
+                  ? `${singleDevice?.positions[0].y.toFixed(2)}`
+                  : "NaN"}
+              </Text>
             )}
             {singleDevice?.type == "anchor" ? (
               <IconButton
@@ -103,7 +123,7 @@ export const DevicePage = () => {
           </HStack>
         </CardBody>
       </Card>
-      <Card w={"80%"} h={"60%"} m={10}>
+      <Card w={"80%"} h={"80%"} mt={10}>
         <CardBody>
           {singleDevice ? (
             <MapWindow
@@ -111,7 +131,9 @@ export const DevicePage = () => {
               setDeviceDetail={setSingleDevice}
             />
           ) : (
-            <></>
+            <>
+              <Skeleton height="100%" />
+            </>
           )}
         </CardBody>
       </Card>

@@ -14,17 +14,20 @@ import {
   Th,
   Thead,
   Tr,
+  useToast,
 } from "@chakra-ui/react";
 import { FaSearch } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import axiosCloud, { ENDPOINT } from "../features/AxiosCloud.ts";
 import { device } from "../features/Interface.tsx";
 import { useNavigate } from "react-router-dom";
+import { AxiosError } from "axios";
 
 export const DeviceGrid = ({ type }: { type: string }) => {
   const [loading, setLoading] = useState(true);
   const [deviceList, setDeviceList] = useState<device[]>();
   const navigate = useNavigate();
+  const toast = useToast();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -40,17 +43,27 @@ export const DeviceGrid = ({ type }: { type: string }) => {
       .then((result) => {
         setDeviceList(result.data);
         setLoading(false);
+      })
+      .catch((error: AxiosError) => {
+        if (error.message == "Network Error") {
+          toast({
+            status: "error",
+            title: "Server Error",
+            variant: "solid",
+            duration: 5000,
+            isClosable: true,
+            position: "top-right",
+          });
+        }
       });
   };
 
   return (
     <>
-      <Card m={50} minW={"40%"}>
+      <Card mt={50} mr={50} minW={"40%"} shadow={"2xl"}>
         <CardHeader>
-          <HStack alignItems={"end"}>
-            <Heading size="xl" mr={"5%"}>
-              {type == "anchor" ? "Anchor" : "Tag"}
-            </Heading>
+          <HStack>
+            <Heading>{type == "anchor" ? "Anchor" : "Tag"}</Heading>
           </HStack>
         </CardHeader>
         <CardBody>
@@ -59,12 +72,20 @@ export const DeviceGrid = ({ type }: { type: string }) => {
               <Thead>
                 <Tr>
                   <Th>mac Address</Th>
-                  <Th>Actions</Th>
+                  <Th textAlign={"center"}>X</Th>
+                  <Th textAlign={"center"}>Y</Th>
+                  <Th>Action</Th>
                 </Tr>
               </Thead>
               <Tbody>
                 {loading ? (
                   <Tr>
+                    <Td>
+                      <Skeleton height="20px" />
+                    </Td>
+                    <Td>
+                      <Skeleton height="20px" />
+                    </Td>
                     <Td>
                       <Skeleton height="20px" />
                     </Td>
@@ -77,6 +98,16 @@ export const DeviceGrid = ({ type }: { type: string }) => {
                     {deviceList?.map((device, index) => (
                       <Tr key={index}>
                         <Td>{device.macAddress}</Td>
+                        <Td textAlign={"center"}>
+                          {device.positions[0]
+                            ? `${device.positions[0].x.toFixed(2)}`
+                            : "NaN"}
+                        </Td>
+                        <Td textAlign={"center"}>
+                          {device.positions[0]
+                            ? `${device.positions[0].y.toFixed(2)}`
+                            : "NaN"}
+                        </Td>
                         <Td>
                           <IconButton
                             size={"xs"}

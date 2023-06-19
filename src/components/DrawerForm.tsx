@@ -31,19 +31,17 @@ export const DrawerForm = ({
 
   const [positionX, setPositionX] = useState<number>(device?.positions[0].x);
   const handleXInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputNum = parseInt(e.target.value);
+    const inputNum = parseFloat(e.target.value);
     setPositionX(inputNum);
   };
 
   const [positionY, setPositionY] = useState<number>(device?.positions[0].y);
   const handleYInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputNum = parseInt(e.target.value);
+    const inputNum = parseFloat(e.target.value);
     setPositionY(inputNum);
   };
 
   const handleSubmit = async () => {
-    console.log(Number.isNaN(positionX));
-
     try {
       setLoading(true);
       await axiosCloud

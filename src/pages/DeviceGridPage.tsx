@@ -4,7 +4,7 @@ import { DeviceGrid } from "../components/DeviceGrid";
 export const DeviceGridPage = () => {
   return (
     <>
-      <Heading pl={100}>Devices</Heading>
+      <Heading>Devices</Heading>
       <Box>
         <HStack alignItems={"start"}>
           <DeviceGrid type="anchor" />
