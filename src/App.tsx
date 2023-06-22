@@ -8,6 +8,7 @@ import { Base } from "./pages/Base";
 import { MapPage } from "./pages/MapPage";
 import { DeviceGridPage } from "./pages/DeviceGridPage";
 import { DevicePage } from "./pages/DevicePage";
+import { Setup } from "./pages/Setup";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
                 element={<DevicePage />}
               />
             </Route>
+            <Route path="/setup" element={<Setup />} />
           </Routes>
         </BrowserRouter>
       </ChakraProvider>
