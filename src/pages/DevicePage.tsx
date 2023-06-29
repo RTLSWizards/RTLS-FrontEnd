@@ -1,4 +1,5 @@
 import {
+  Button,
   Card,
   CardBody,
   CardHeader,
@@ -6,6 +7,7 @@ import {
   Heading,
   IconButton,
   Skeleton,
+  Spacer,
   Text,
   useDisclosure,
   useToast,
@@ -24,6 +26,7 @@ import axiosCloud, { ENDPOINT } from "../features/AxiosCloud";
 import { MapWindow } from "../components/MapWindow";
 import { DrawerForm } from "../components/DrawerForm";
 import { AxiosError } from "axios";
+import { WarningIcon } from "@chakra-ui/icons";
 
 export const DevicePage = () => {
   const param = useParams();
@@ -76,6 +79,14 @@ export const DevicePage = () => {
             <Heading size="md">
               {param.type == "anchor" ? "Anchor Detail" : "Tag Detail"}
             </Heading>
+            <Spacer />
+            {param.type == "anchor" ? (
+              <Button colorScheme="yellow" rightIcon={<WarningIcon />}>
+                Dissocia da Sede
+              </Button>
+            ) : (
+              <></>
+            )}
           </HStack>
         </CardHeader>
         <CardBody>

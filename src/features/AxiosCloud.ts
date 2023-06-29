@@ -9,4 +9,5 @@ export default axiosCloud;
 export const ENDPOINT = {
   anchor: "anchor",
   tag: "tag",
+  site: "site",
 };

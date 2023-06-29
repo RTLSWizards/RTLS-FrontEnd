@@ -1,11 +1,4 @@
-import {
-  Alert,
-  AlertIcon,
-  Box,
-  HStack,
-  IconButton,
-  useMediaQuery,
-} from "@chakra-ui/react";
+import { Text, Box, HStack, IconButton, useMediaQuery } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 import { MdMenu } from "react-icons/md";
 import { useEffect, useState } from "react";
@@ -38,6 +31,9 @@ export const Base = () => {
         <Box h={"80%"} ml={20}>
           <Outlet />
         </Box>
+        <Text position={"absolute"} top={10} right={6}>
+          Nome Azienda (cambiare in seguito)
+        </Text>
       </Box>
     </HStack>
   );

@@ -32,7 +32,7 @@ export const DeviceGrid = ({ type }: { type: string }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       getDevice();
-    }, 3000);
+    }, 7000);
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

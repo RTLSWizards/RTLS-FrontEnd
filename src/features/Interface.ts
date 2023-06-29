@@ -26,3 +26,16 @@ export interface simplePosition {
   x: number;
   y: number;
 }
+
+export interface DeviceCardProps {
+  macAddr?: string;
+}
+
+export interface ConfirmModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export interface Site {
+  name: string;
+}

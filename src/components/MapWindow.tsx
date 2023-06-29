@@ -169,7 +169,7 @@ export const MapWindow = ({
       } else {
         setTimer(getTimeFrequency() / 1000);
       }
-    }, 1000);
+    }, 3000);
     return () => clearInterval(interval);
   }, [timer]);
 

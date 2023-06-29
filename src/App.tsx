@@ -8,7 +8,8 @@ import { Base } from "./pages/Base";
 import { MapPage } from "./pages/MapPage";
 import { DeviceGridPage } from "./pages/DeviceGridPage";
 import { DevicePage } from "./pages/DevicePage";
-import { Setup } from "./pages/Setup";
+import { SetupModal } from "./components/setup/SetupModal";
+import { SetupBase } from "./pages/SetupBase";
 
 function App() {
   return (
@@ -18,14 +19,16 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route element={<Base />}>
-              <Route path="/" element={<MapPage />} />
-              <Route path="/device-grid" element={<DeviceGridPage />} />
-              <Route
-                path="/device-grid/:type/:macAddress"
-                element={<DevicePage />}
-              />
+              <Route element={<SetupModal />}>
+                <Route path="/" element={<MapPage />} />
+                <Route path="/device-grid" element={<DeviceGridPage />} />
+                <Route
+                  path="/device-grid/:type/:macAddress"
+                  element={<DevicePage />}
+                />
+              </Route>
             </Route>
-            <Route path="/setup" element={<Setup />} />
+            <Route path="/setup" element={<SetupBase />}></Route>
           </Routes>
         </BrowserRouter>
       </ChakraProvider>
