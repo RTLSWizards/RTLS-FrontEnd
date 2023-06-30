@@ -73,7 +73,9 @@ export const SiteGrid = ({
   };
 
   const handleSubmit = () => {
-    if (site == "") {
+    console.log(site);
+
+    if (site != "") {
       setActiveStep(1);
     } else {
       toast({
@@ -121,7 +123,7 @@ export const SiteGrid = ({
   );
   return (
     <Stack alignItems={"center"}>
-      {!errorNet ? (
+      {errorNet ? (
         <>
           <WarningIcon w={8} h={8} color="red.500" mt={100} />
           <Heading mb={5}>Something was wrong!</Heading>
@@ -141,14 +143,12 @@ export const SiteGrid = ({
                 mb={50}
                 variant={"filled"}
                 placeholder="ex. demo site"
+                onChange={(e) => {
+                  setSite(e.target.value);
+                }}
               >
-                <option onClick={() => setSite("")}></option>
                 {siteList?.map((site, index) => (
-                  <option
-                    onClick={() => setSite(site.name)}
-                    key={index}
-                    value={site.name}
-                  >
+                  <option key={index} value={site.name}>
                     {site.name}
                   </option>
                 ))}

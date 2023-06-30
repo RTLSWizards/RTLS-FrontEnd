@@ -86,18 +86,11 @@ export const SetupDevices = () => {
                         <DeviceCard mac={deviceItem.macAddress} />
                       </Box>
                     ))}
-                    <Box>
-                      <DeviceCard mac="221" />
-                      <DeviceCard mac="221" />
-                      <DeviceCard mac="221" />
-                      <DeviceCard mac="221" />
-                      <DeviceCard mac="221" />
-                      <DeviceCard mac="221" />
-                      <DeviceCard mac="221" />
-                      <DeviceCard mac="221" />
-                      <DeviceCard mac="221" />
-                      <DeviceCard mac="221" />
-                    </Box>
+                    <DeviceCard mac="test" />
+                    <DeviceCard mac="test" />
+                    <DeviceCard mac="test" />
+                    <DeviceCard mac="test" />
+                    <DeviceCard mac="test" />
                   </SimpleGrid>
                   <Button
                     variant={"solid"}

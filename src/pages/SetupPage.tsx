@@ -9,16 +9,15 @@ export const SetupPage = ({
     <Stack>
       <Box textAlign={"center"} m={50}>
         <Heading size={"lg"} marginBottom={5}>
-          Benvenuto nella pagina di setup del sistema RTLS!
+          Welcome to the RTLS system setup page!
         </Heading>
         <Text marginBottom={3}>
-          Per avviare il tracciamento, è importante posizionare le ancore nei
-          punti desiderati all'interno dell'area che desideri monitorare.
-          Assicurati di misurare le dimensioni della stanza utilizzando uno
-          strumento e inserisci le coordinate corrette delle ancore. La prima
-          ancora è posizionata di default a (0.1) e rimane fissa. Una volta
-          inserite tutte le informazioni, sarai pronto per avviare il
-          tracciamento.
+          To start tracking, it is important to place the anchors in the desired
+          points within the area you wish to monitor. Make sure you measure the
+          size of the room using one tool and enter the correct coordinates of
+          the anchors. The first it is still set by default to (0.1) and remains
+          fixed. Once enter all the information, you will be ready to start the
+          tracking.
         </Text>
         <Button
           colorScheme="teal"
@@ -26,7 +25,7 @@ export const SetupPage = ({
           m={50}
           onClick={() => setActiveStep(0)}
         >
-          Iniziamo!
+          Start
         </Button>
       </Box>
     </Stack>
