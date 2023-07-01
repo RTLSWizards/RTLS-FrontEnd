@@ -32,10 +32,19 @@ export const DeviceGrid = ({ type }: { type: string }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       getDevice();
-    }, 7000);
+    }, getTimeFrequency());
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const getTimeFrequency = () => {
+    const timer = localStorage.getItem("refreshingTime");
+    if (timer) {
+      return parseInt(timer);
+    } else {
+      return 2000;
+    }
+  };
 
   const getDevice = async () => {
     await axiosCloud

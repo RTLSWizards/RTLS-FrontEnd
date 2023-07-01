@@ -6,6 +6,13 @@ import {
   HStack,
   Heading,
   IconButton,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Skeleton,
   Spacer,
   Text,
@@ -16,7 +23,7 @@ import { FaEdit } from "react-icons/fa";
 
 // LOGICS
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 // FEATURES
 import { device } from "../features/Interface";
@@ -30,15 +37,23 @@ import { WarningIcon } from "@chakra-ui/icons";
 
 export const DevicePage = () => {
   const param = useParams();
+  const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedModal, setSelectedModal] = useState<string>();
+
   const openDrawerForm = () => {
     setSelectedModal("drawer");
     onOpen();
   };
 
+  const openDissasociateModal = () => {
+    setSelectedModal("disassociate");
+    onOpen();
+  };
+
   const [loading, setLoading] = useState<boolean>(true);
   const [singleDevice, setSingleDevice] = useState<device>();
+
   const toast = useToast();
 
   const getContact = async () => {
@@ -51,6 +66,26 @@ export const DevicePage = () => {
       .then((result) => {
         setSingleDevice(result.data);
         setLoading(false);
+      })
+      .catch((error: AxiosError) => {
+        if (error.message == "Network Error") {
+          toast({
+            status: "error",
+            title: "Server Error",
+            variant: "solid",
+            duration: 5000,
+            isClosable: true,
+            position: "top-right",
+          });
+        }
+      });
+  };
+
+  const dissociateAnchorFromSite = async () => {
+    await axiosCloud
+      .put(ENDPOINT.anchor + "/dissociate/" + param.macAddress)
+      .then(() => {
+        navigate(-1);
       })
       .catch((error: AxiosError) => {
         if (error.message == "Network Error") {
@@ -81,8 +116,12 @@ export const DevicePage = () => {
             </Heading>
             <Spacer />
             {param.type == "anchor" ? (
-              <Button colorScheme="yellow" rightIcon={<WarningIcon />}>
-                Dissocia da Sede
+              <Button
+                colorScheme="yellow"
+                rightIcon={<WarningIcon />}
+                onClick={() => openDissasociateModal()}
+              >
+                Dissociate from Site
               </Button>
             ) : (
               <></>
@@ -105,7 +144,6 @@ export const DevicePage = () => {
               <Skeleton height="15px" w={"20%"} />
             ) : (
               <Text fontSize="sm">
-                {" "}
                 {singleDevice?.positions[0]
                   ? `${singleDevice?.positions[0].x.toFixed(2)}`
                   : "NaN"}
@@ -130,6 +168,16 @@ export const DevicePage = () => {
               />
             ) : (
               <></>
+            )}
+          </HStack>
+          <HStack>
+            <Text as={"b"}>Site:</Text>
+            {loading ? (
+              <Skeleton height="15px" w={"20%"} />
+            ) : (
+              <Text fontSize="sm">
+                {singleDevice?.siteName ? `${singleDevice.siteName}` : ""}
+              </Text>
             )}
           </HStack>
         </CardBody>
@@ -158,6 +206,35 @@ export const DevicePage = () => {
         />
       ) : (
         <></>
+      )}
+      {selectedModal == "disassociate" && singleDevice ? (
+        <>
+          <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Modal Title</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                Are you sure? to reconnect this device in the future you will
+                need to go through the Setup process.
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  colorScheme="yellow"
+                  mr={3}
+                  onClick={() => dissociateAnchorFromSite()}
+                >
+                  Dissociate
+                </Button>
+                <Button variant="ghost" onClick={onClose}>
+                  Close
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+        </>
+      ) : (
+        <> </>
       )}
     </>
   );

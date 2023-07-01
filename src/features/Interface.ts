@@ -10,6 +10,7 @@ export interface device {
   id: string;
   macAddress: string;
   positions: position[];
+  siteName: string;
   type: string;
 }
 
