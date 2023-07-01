@@ -10,15 +10,22 @@ import { DeviceGridPage } from "./pages/DeviceGridPage";
 import { DevicePage } from "./pages/DevicePage";
 import { SetupModal } from "./components/setup/SetupModal";
 import { SetupBase } from "./pages/SetupBase";
+import { SetSitePage } from "./pages/SetSitePage";
 
 function App() {
+  console.log(localStorage.getItem("site"));
+
   return (
     <>
       <ColorModeScript />
       <ChakraProvider>
         <BrowserRouter>
           <Routes>
-            <Route element={<Base />}>
+            <Route
+              element={
+                localStorage.getItem("site") ? <Base /> : <SetSitePage />
+              }
+            >
               <Route element={<SetupModal />}>
                 <Route path="/" element={<MapPage />} />
                 <Route path="/device-grid" element={<DeviceGridPage />} />

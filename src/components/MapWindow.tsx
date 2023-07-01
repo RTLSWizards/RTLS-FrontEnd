@@ -72,8 +72,8 @@ export const MapWindow = ({
 
   const [loading, setLoading] = useState(true);
 
-  const [tagList, setTagList] = useState<device[]>([]);
-  const [anchorList, setAnchorList] = useState<device[]>([]);
+  const [tagList, setTagList] = useState<device[]>();
+  const [anchorList, setAnchorList] = useState<device[]>();
 
   const [timer, setTimer] = useState(0);
 
@@ -210,6 +210,7 @@ export const MapWindow = ({
           ) : (
             <></>
           )}
+
           {anchorList?.map((anchor, index) => (
             <Marker
               key={index}
@@ -225,6 +226,7 @@ export const MapWindow = ({
               </Popup>
             </Marker>
           ))}
+
           {tagList?.map((tag, index) => (
             <Box key={index}>
               <Marker

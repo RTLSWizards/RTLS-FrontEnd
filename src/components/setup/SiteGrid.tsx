@@ -73,8 +73,6 @@ export const SiteGrid = ({
   };
 
   const handleSubmit = () => {
-    console.log(site);
-
     if (site != "") {
       setActiveStep(1);
     } else {

@@ -13,8 +13,8 @@ export const NavItem = ({
 }) => {
   const { label, icon, path } = item;
   const { colorMode } = useColorMode();
-  const location = useLocation();
   const isDark = colorMode === "dark" ? "white" : "black";
+  const location = useLocation();
   const navigateToPath = () => {
     if (path === "/") {
       localStorage.removeItem("token");

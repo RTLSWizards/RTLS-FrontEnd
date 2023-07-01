@@ -32,7 +32,7 @@ export const Base = () => {
           <Outlet />
         </Box>
         <Text position={"absolute"} top={10} right={6}>
-          Nome Sede (cambiare in seguito)
+          {localStorage.getItem("site")}
         </Text>
       </Box>
     </HStack>
