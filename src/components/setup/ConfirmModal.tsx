@@ -8,22 +8,41 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import { ConfirmModalProps } from "../../features/Interface";
 
-export const ConfirmModal = (props: ConfirmModalProps) => {
+export const ConfirmModal = ({
+  isOpen,
+  onClose,
+  setActiveStep,
+  site,
+  activeStep,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  setActiveStep: React.Dispatch<React.SetStateAction<number>>;
+  site: string | undefined;
+  activeStep: number;
+}) => {
   return (
-    <Modal isOpen={props.isOpen} onClose={props.onClose}>
+    <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Confermi?</ModalHeader>
+        <ModalHeader>Are you sure?</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>Una volta confermato le ancore si attiveranno.</ModalBody>
+        <ModalBody>Once confirmed the anchors will activate</ModalBody>
         <ModalFooter>
-          <Button colorScheme="teal" mr={3}>
-            Conferma
+          <Button
+            colorScheme="teal"
+            mr={3}
+            onClick={() => {
+              if (site != undefined) {
+                setActiveStep(activeStep + 1);
+              }
+            }}
+          >
+            Confirm
           </Button>
-          <Button variant="ghost" onClick={props.onClose}>
-            Annulla
+          <Button variant="ghost" onClick={onClose}>
+            Back
           </Button>
         </ModalFooter>
       </ModalContent>

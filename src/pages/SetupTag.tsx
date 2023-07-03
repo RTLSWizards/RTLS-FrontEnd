@@ -1,6 +1,8 @@
+import { WarningIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
+  Divider,
   Heading,
   SimpleGrid,
   Spinner,
@@ -8,15 +10,14 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { DeviceCard } from "../components/setup/DeviceCard";
-import { ConfirmModal } from "../components/setup/ConfirmModal";
 import { useEffect, useState } from "react";
 import { device } from "../features/Interface";
 import axiosCloud, { ENDPOINT } from "../features/AxiosCloud";
 import { AxiosError } from "axios";
-import { WarningIcon } from "@chakra-ui/icons";
+import { AddDeviceCard } from "../components/setup/AddDeviceCard";
+import { ConfirmModal } from "../components/setup/ConfirmModal";
 
-export const SetupDevices = ({
+export const SetupTag = ({
   site,
   setActiveStep,
   activeStep,
@@ -27,6 +28,7 @@ export const SetupDevices = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [deviceList, setDeviceList] = useState<device[]>();
+  const [deviceSiteList, setDeviceSiteList] = useState<device[]>();
   const [loading, setLoading] = useState<boolean>(false);
   const [errorNet, setErrorNet] = useState<boolean>(false);
 
@@ -35,18 +37,40 @@ export const SetupDevices = ({
   const getDeviceList = async () => {
     setErrorNet(false);
     setLoading(true);
-    axiosCloud
-      .get(ENDPOINT.anchor + "/site/" + site)
+    await axiosCloud
+      .get(ENDPOINT.tag + "/site/null")
       .then((res) => {
-        console.log(site);
-        console.log(res.data);
-
         setDeviceList(res.data);
         setLoading(false);
       })
       .catch((err: AxiosError) => {
-        setLoading(false);
         setErrorNet(true);
+        setLoading(false);
+        if (err.message == "Network Error" || err.code == "ERR_NETWORK") {
+          toast({
+            status: "error",
+            title: "Server Error",
+            variant: "solid",
+            duration: 3000,
+            isClosable: true,
+            position: "top-right",
+          });
+        }
+      });
+  };
+
+  const getDeviceSiteList = async () => {
+    setErrorNet(false);
+    setLoading(true);
+    await axiosCloud
+      .get(ENDPOINT.tag + "/site/" + site)
+      .then((res) => {
+        setDeviceSiteList(res.data);
+        setLoading(false);
+      })
+      .catch((err: AxiosError) => {
+        setErrorNet(true);
+        setLoading(false);
         if (err.message == "Network Error" || err.code == "ERR_NETWORK") {
           toast({
             status: "error",
@@ -62,6 +86,8 @@ export const SetupDevices = ({
 
   useEffect(() => {
     getDeviceList();
+    getDeviceSiteList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -88,15 +114,35 @@ export const SetupDevices = ({
             ) : (
               <>
                 <Heading textAlign={"center"}>
-                  Esegui il setup dei dispositivi
+                  Add the new devices to the site{" "}
                 </Heading>
                 <center>
                   <SimpleGrid columns={5} spacing={5} marginBottom={5}>
                     {deviceList?.map((deviceItem, index) => (
                       <Box key={index}>
-                        <DeviceCard
+                        <AddDeviceCard
                           deviceItem={deviceItem}
-                          getDeviceList={getDeviceList}
+                          action={"add"}
+                          site={site}
+                          getDeviceList={() => getDeviceList()}
+                          getDeviceSiteList={() => getDeviceSiteList()}
+                        />
+                      </Box>
+                    ))}
+                  </SimpleGrid>
+                  <Divider />
+                  <Heading textAlign={"center"}>
+                    Or dissociate devices to the site
+                  </Heading>
+                  <SimpleGrid columns={5} spacing={5} marginBottom={5}>
+                    {deviceSiteList?.map((deviceItem, index) => (
+                      <Box key={index}>
+                        <AddDeviceCard
+                          deviceItem={deviceItem}
+                          action={"disassociate"}
+                          site={site}
+                          getDeviceList={() => getDeviceList()}
+                          getDeviceSiteList={() => getDeviceSiteList()}
                         />
                       </Box>
                     ))}
@@ -109,7 +155,7 @@ export const SetupDevices = ({
                     onClick={onOpen}
                     m={5}
                   >
-                    Conferma
+                    Confirm
                   </Button>
                 </center>
               </>

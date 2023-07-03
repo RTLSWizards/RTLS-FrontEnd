@@ -2,7 +2,6 @@ import {
   Button,
   Card,
   CardBody,
-  CardHeader,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
@@ -15,11 +14,20 @@ import {
   Input,
   Stack,
   Text,
+  VStack,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { device } from "../../features/Interface";
+import axiosCloud, { ENDPOINT } from "../../features/AxiosCloud";
 
-export const DeviceCard = ({ mac }: { mac: string }) => {
+export const DeviceCard = ({
+  deviceItem,
+  getDeviceList,
+}: {
+  deviceItem: device;
+  getDeviceList: () => Promise<void>;
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -35,23 +43,45 @@ export const DeviceCard = ({ mac }: { mac: string }) => {
     setPositionY(inputNum);
   };
 
+  const handleSubmit = async () => {
+    setLoading(true);
+    await axiosCloud
+      .put(
+        ENDPOINT.anchor + "/mac/positions/" + deviceItem.macAddress,
+        JSON.stringify({ x: positionX, y: positionY })
+      )
+      .then(() => {
+        getDeviceList();
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  };
+
   return (
     <>
       <Card m={5}>
-        <CardHeader>
-          <Heading size="md" as={"i"}>
-            {mac}
-          </Heading>
-        </CardHeader>
         <CardBody>
-          <Button onClick={onOpen}>Open</Button>
+          <VStack>
+            <Heading size="md" as={"i"}>
+              {deviceItem.macAddress}
+            </Heading>
+            <HStack>
+              <Text>X: {deviceItem.positions[0].x}</Text>
+              <Text>Y: {deviceItem.positions[0].y}</Text>
+            </HStack>
+            <Button size={"xs"} onClick={onOpen}>
+              Open
+            </Button>
+          </VStack>
         </CardBody>
       </Card>
       <Drawer isOpen={isOpen} onClose={onClose}>
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>Register a new site</DrawerHeader>
+          <DrawerHeader>New Data for {deviceItem.macAddress}</DrawerHeader>
           <DrawerBody>
             <Stack spacing="24px" mt={5}>
               <HStack>
@@ -59,7 +89,7 @@ export const DeviceCard = ({ mac }: { mac: string }) => {
                 <Input
                   id="x"
                   onChange={handleXInput}
-                  placeholder="Please enter position X"
+                  placeholder="ex. 2"
                   size={"xs"}
                   type="number"
                   required
@@ -70,7 +100,7 @@ export const DeviceCard = ({ mac }: { mac: string }) => {
                 <Input
                   id="y"
                   onChange={handleYInput}
-                  placeholder="Please enter position Y"
+                  placeholder="ex. 3.54"
                   size={"xs"}
                   type="number"
                   required
@@ -82,7 +112,13 @@ export const DeviceCard = ({ mac }: { mac: string }) => {
             <Button variant="outline" mr={3} onClick={onClose}>
               Cancel
             </Button>
-            <Button colorScheme="blue">Save</Button>
+            <Button
+              colorScheme="blue"
+              onClick={handleSubmit}
+              isLoading={loading}
+            >
+              Save
+            </Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>

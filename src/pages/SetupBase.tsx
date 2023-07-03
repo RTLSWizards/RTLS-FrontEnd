@@ -15,19 +15,23 @@ import {
   useSteps,
 } from "@chakra-ui/react";
 import { SetupPage } from "./SetupPage";
-import { SetupDevices } from "./SetupDevices";
 import { SetupSite } from "./SetupSite";
 import { useState } from "react";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { FaHome } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { SetupNewDevices } from "./SetupNewDevices";
+import { SetupSuccessfull } from "./SetupSuccessfull";
+import { SetupTag } from "./SetupTag";
 
 export const SetupBase = () => {
   const navigate = useNavigate();
   const [site, setSite] = useState<string>("");
   const steps = [
     { title: "Site", description: "Select a site" },
-    { title: "Setup Anchors", description: "" },
+    { title: "Setup new Anchors", description: "" },
+    { title: "Setup positions Anchors", description: "" },
+    { title: "Setup tags", description: "" },
     { title: "Review", description: "Review" },
   ];
 
@@ -49,7 +53,31 @@ export const SetupBase = () => {
           />
         );
       case 1:
-        return <SetupDevices />;
+        return (
+          <SetupNewDevices
+            site={site}
+            activeStep={activeStep}
+            setActiveStep={setActiveStep}
+          />
+        );
+      case 2:
+        return (
+          <SetupTag
+            site={site}
+            activeStep={activeStep}
+            setActiveStep={setActiveStep}
+          />
+        );
+      case 3:
+        return (
+          <SetupTag
+            site={site}
+            activeStep={activeStep}
+            setActiveStep={setActiveStep}
+          />
+        );
+      case 4:
+        return <SetupSuccessfull />;
       default:
         break;
     }

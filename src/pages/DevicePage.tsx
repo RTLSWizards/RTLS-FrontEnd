@@ -35,26 +35,27 @@ import { DrawerForm } from "../components/DrawerForm";
 import { AxiosError } from "axios";
 import { WarningIcon } from "@chakra-ui/icons";
 
-export const DevicePage = () => {
+export const DevicePage = ({ defaultTimer }: { defaultTimer: number }) => {
+  const [singleDevice, setSingleDevice] = useState<device>();
+
+  const [loading, setLoading] = useState<boolean>(true);
+  const toast = useToast();
   const param = useParams();
   const navigate = useNavigate();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [selectedModal, setSelectedModal] = useState<string>();
 
-  const openDrawerForm = () => {
-    setSelectedModal("drawer");
+  // disclosure useState change for open drawer or modal
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [disclosure, setDisclosure] = useState<string>();
+
+  const openFormDrawer = () => {
+    setDisclosure("drawer");
     onOpen();
   };
 
   const openDissasociateModal = () => {
-    setSelectedModal("disassociate");
+    setDisclosure("disassociate");
     onOpen();
   };
-
-  const [loading, setLoading] = useState<boolean>(true);
-  const [singleDevice, setSingleDevice] = useState<device>();
-
-  const toast = useToast();
 
   const getContact = async () => {
     await axiosCloud
@@ -164,7 +165,7 @@ export const DevicePage = () => {
                 icon={<FaEdit />}
                 aria-label={"edit"}
                 rounded={"3xl"}
-                onClick={() => openDrawerForm()}
+                onClick={() => openFormDrawer()}
               />
             ) : (
               <></>
@@ -188,6 +189,7 @@ export const DevicePage = () => {
             <MapWindow
               deviceDetail={singleDevice}
               setDeviceDetail={setSingleDevice}
+              defaultTimer={defaultTimer}
             />
           ) : (
             <>
@@ -196,7 +198,7 @@ export const DevicePage = () => {
           )}
         </CardBody>
       </Card>
-      {selectedModal == "drawer" && singleDevice ? (
+      {disclosure == "drawer" && singleDevice ? (
         <DrawerForm
           isOpen={isOpen}
           onOpen={onOpen}
@@ -207,9 +209,9 @@ export const DevicePage = () => {
       ) : (
         <></>
       )}
-      {selectedModal == "disassociate" && singleDevice ? (
+      {disclosure == "disassociate" && singleDevice ? (
         <>
-          <Modal isOpen={isOpen} onClose={onClose}>
+          <Modal isOpen={isOpen} onClose={onClose} isCentered>
             <ModalOverlay />
             <ModalContent>
               <ModalHeader>Modal Title</ModalHeader>

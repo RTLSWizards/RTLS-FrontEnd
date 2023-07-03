@@ -11,9 +11,10 @@ import { DevicePage } from "./pages/DevicePage";
 import { SetupModal } from "./components/setup/SetupModal";
 import { SetupBase } from "./pages/SetupBase";
 import { SetSitePage } from "./pages/SetSitePage";
+import { useState } from "react";
 
 function App() {
-  console.log(localStorage.getItem("site"));
+  const [defaultTimer] = useState(3000);
 
   return (
     <>
@@ -27,11 +28,17 @@ function App() {
               }
             >
               <Route element={<SetupModal />}>
-                <Route path="/" element={<MapPage />} />
-                <Route path="/device-grid" element={<DeviceGridPage />} />
+                <Route
+                  path="/"
+                  element={<MapPage defaultTimer={defaultTimer} />}
+                />
+                <Route
+                  path="/device-grid"
+                  element={<DeviceGridPage defaultTimer={defaultTimer} />}
+                />
                 <Route
                   path="/device-grid/:type/:macAddress"
-                  element={<DevicePage />}
+                  element={<DevicePage defaultTimer={defaultTimer} />}
                 />
               </Route>
             </Route>

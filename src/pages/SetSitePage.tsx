@@ -1,21 +1,9 @@
 import {
   Box,
   Button,
-  Drawer,
-  DrawerBody,
-  DrawerCloseButton,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerOverlay,
-  FormControl,
-  FormLabel,
   Heading,
-  Input,
   Select,
-  Spinner,
   Stack,
-  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
@@ -24,17 +12,16 @@ import { AxiosError } from "axios";
 import { Site } from "../features/Interface";
 
 export const SetSitePage = () => {
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const toast = useToast();
-
+  // site selected
   const [site, setSite] = useState("");
+
   const [siteList, setSiteList] = useState<Site[]>();
-  const [name, setName] = useState<string>();
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const toast = useToast();
 
   const getSiteList = () => {
     setLoading(true);
-
     axiosCloud
       .get(ENDPOINT.site)
       .then((res) => {
@@ -47,7 +34,6 @@ export const SetSitePage = () => {
           toast({
             status: "error",
             title: "Server Error",
-            variant: "solid",
             duration: 3000,
             isClosable: true,
             position: "top-right",
@@ -64,7 +50,6 @@ export const SetSitePage = () => {
       toast({
         status: "error",
         title: "Please, select a site.",
-        variant: "solid",
         duration: 3000,
         isClosable: true,
         position: "top-right",
@@ -81,7 +66,7 @@ export const SetSitePage = () => {
   return (
     <Stack alignItems={"center"}>
       <>
-        <Box>
+        <Box mt={200}>
           <Heading textAlign={"center"}>Select the site</Heading>
           <Select
             mt={50}
@@ -103,11 +88,9 @@ export const SetSitePage = () => {
             colorScheme="teal"
             mb={10}
             onClick={handleSubmit}
+            isLoading={loading}
           >
             Confirm
-          </Button>
-          <Button width={"100%"} colorScheme="yellow" mb={50}>
-            Register a new site
           </Button>
         </Box>
       </>

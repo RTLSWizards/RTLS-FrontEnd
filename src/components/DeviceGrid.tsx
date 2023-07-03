@@ -48,7 +48,11 @@ export const DeviceGrid = ({ type }: { type: string }) => {
 
   const getDevice = async () => {
     await axiosCloud
-      .get(type == "anchor" ? ENDPOINT.anchor : ENDPOINT.tag)
+      .get(
+        (type == "anchor" ? ENDPOINT.anchor : ENDPOINT.tag) +
+          "/site/" +
+          localStorage.getItem("site")
+      )
       .then((result) => {
         setDeviceList(result.data);
         setLoading(false);
@@ -88,20 +92,36 @@ export const DeviceGrid = ({ type }: { type: string }) => {
               </Thead>
               <Tbody>
                 {loading ? (
-                  <Tr>
-                    <Td>
-                      <Skeleton height="20px" />
-                    </Td>
-                    <Td>
-                      <Skeleton height="20px" />
-                    </Td>
-                    <Td>
-                      <Skeleton height="20px" />
-                    </Td>
-                    <Td>
-                      <SkeletonCircle size="10" />
-                    </Td>
-                  </Tr>
+                  <>
+                    <Tr>
+                      <Td>
+                        <Skeleton height="20px" />
+                      </Td>
+                      <Td>
+                        <Skeleton height="20px" />
+                      </Td>
+                      <Td>
+                        <Skeleton height="20px" />
+                      </Td>
+                      <Td>
+                        <SkeletonCircle size="10" />
+                      </Td>
+                    </Tr>
+                    <Tr>
+                      <Td>
+                        <Skeleton height="20px" />
+                      </Td>
+                      <Td>
+                        <Skeleton height="20px" />
+                      </Td>
+                      <Td>
+                        <Skeleton height="20px" />
+                      </Td>
+                      <Td>
+                        <SkeletonCircle size="10" />
+                      </Td>
+                    </Tr>
+                  </>
                 ) : (
                   <>
                     {deviceList?.map((device, index) => (

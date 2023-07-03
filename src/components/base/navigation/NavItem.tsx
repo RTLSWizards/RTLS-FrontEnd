@@ -1,4 +1,4 @@
-import { Link, Box, Button, useColorMode, ListIcon } from "@chakra-ui/react";
+import { Link, Box, Button, ListIcon } from "@chakra-ui/react";
 import { NavLink, NavigateFunction, useLocation } from "react-router-dom";
 import { navItem } from "../../../features/Interface";
 
@@ -6,21 +6,15 @@ export const NavItem = ({
   item,
   navigate,
   collapse,
+  colorScheme,
 }: {
   item: navItem;
   navigate: NavigateFunction;
   collapse: boolean;
+  colorScheme: string;
 }) => {
   const { label, icon, path } = item;
-  const { colorMode } = useColorMode();
-  const isDark = colorMode === "dark" ? "white" : "black";
   const location = useLocation();
-  const navigateToPath = () => {
-    if (path === "/") {
-      localStorage.removeItem("token");
-    }
-    navigate(path);
-  };
 
   return (
     <Box
@@ -30,7 +24,14 @@ export const NavItem = ({
       justifyContent="center"
     >
       {collapse ? (
-        <Button rounded={"3xl"} variant={"ghost"}>
+        <Button
+          rounded={"3xl"}
+          variant={"ghost"}
+          onClick={() => {
+            navigate(path);
+          }}
+        >
+          {/* Collapsed item */}
           <Link
             gap={2}
             display="flex"
@@ -38,10 +39,7 @@ export const NavItem = ({
             fontWeight="medium"
             w="full"
             justifyContent={collapse ? "center" : ""}
-            _hover={{ textDecoration: "none", color: isDark }}
-            onClick={() => {
-              navigateToPath();
-            }}
+            _hover={{ textDecoration: "none", color: colorScheme }}
           >
             <ListIcon as={icon} fontSize={22} m="0" />
           </Link>
@@ -52,16 +50,21 @@ export const NavItem = ({
             gap={2}
             display="flex"
             alignItems="center"
-            _hover={{ textDecoration: "none", color: isDark }}
+            _hover={{ textDecoration: "none", color: colorScheme }}
             fontWeight="medium"
-            color={location.pathname === path ? isDark : "gray"}
+            color={location.pathname === path ? colorScheme : "gray"}
             w="full"
             justifyContent={collapse ? "center" : ""}
-            onClick={() => {
-              navigateToPath();
-            }}
           >
-            <ListIcon as={icon} fontSize={22} m="0" />
+            {/* expanded item */}
+            <ListIcon
+              as={icon}
+              fontSize={22}
+              m="0"
+              onClick={() => {
+                navigate(path);
+              }}
+            />
             {!collapse && <NavLink to={path}>{label}</NavLink>}
           </Box>
         </>

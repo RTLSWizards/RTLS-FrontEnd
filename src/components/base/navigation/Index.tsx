@@ -1,14 +1,13 @@
 import {
   Box,
   Button,
-  Link,
   List,
   ListIcon,
   ListItem,
   useColorMode,
 } from "@chakra-ui/react";
 import { NavItem } from "./NavItem";
-import { NavLink, NavigateFunction } from "react-router-dom";
+import { NavigateFunction } from "react-router-dom";
 import { items } from "../../../features/navItems";
 import { FaDoorOpen } from "react-icons/fa";
 
@@ -20,15 +19,21 @@ export const Navigation = ({
   collapse: boolean;
 }) => {
   const { colorMode } = useColorMode();
-  const isDark = colorMode === "dark" ? "white" : "black";
+  const colorScheme = colorMode === "dark" ? "white" : "black";
 
   return (
     <List w="full">
       {items.map((item, index) => (
         <ListItem key={index}>
-          <NavItem item={item} navigate={navigate} collapse={collapse} />
+          <NavItem
+            item={item}
+            navigate={navigate}
+            collapse={collapse}
+            colorScheme={colorScheme}
+          />
         </ListItem>
       ))}
+      {/* logout site is out cause is not a link */}
       <ListItem>
         <Box
           display="flex"
@@ -53,7 +58,7 @@ export const Navigation = ({
                 gap={2}
                 display="flex"
                 alignItems="center"
-                _hover={{ textDecoration: "none", color: isDark }}
+                _hover={{ textDecoration: "none", color: colorScheme }}
                 color={"gray"}
                 fontWeight="medium"
                 w="full"
@@ -65,6 +70,7 @@ export const Navigation = ({
                   m="0"
                   onClick={() => {
                     localStorage.removeItem("site");
+                    location.reload();
                   }}
                 />
                 logout site

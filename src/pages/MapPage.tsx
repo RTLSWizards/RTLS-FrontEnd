@@ -13,12 +13,13 @@ import {
 } from "@chakra-ui/react";
 import { MapWindow } from "../components/MapWindow";
 import { LegendTable } from "../components/LegendTable";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaEdit } from "react-icons/fa";
 
-export const MapPage = () => {
-  const [inputTimer, setInputTimer] = useState<number>();
+export const MapPage = ({ defaultTimer }: { defaultTimer: number }) => {
   const [showInput, setShowInput] = useState(false);
+
+  const [inputTimer, setInputTimer] = useState<number>();
   const handleInputTimer = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputNum = parseInt(e.target.value);
     setInputTimer(inputNum);
@@ -28,26 +29,20 @@ export const MapPage = () => {
     if (inputTimer != undefined) {
       const inputTimerInMs = inputTimer * 1000;
       localStorage.setItem("refreshingTime", inputTimerInMs.toString());
-      setTimeFrequency(inputTimerInMs);
       location.reload();
     }
   };
 
-  const getTimeFrequency = () => {
+  // return time frequency for useEffect
+  const getTimeFrequency = (): number => {
     const timer = localStorage.getItem("refreshingTime");
+
     if (timer) {
       return parseInt(timer);
     } else {
-      return 2000;
+      return defaultTimer;
     }
   };
-  const [timeFrequency, setTimeFrequency] = useState<number>(0);
-
-  useEffect(() => {
-    return () => {
-      setTimeFrequency(getTimeFrequency);
-    };
-  }, []);
 
   return (
     <>
@@ -55,7 +50,11 @@ export const MapPage = () => {
       <HStack h={"full"} alignItems={"start"} mt={10}>
         <Card w={"70%"} h={"full"} mr={10} shadow={"2xl"}>
           <CardBody>
-            <MapWindow deviceDetail={null} setDeviceDetail={undefined} />
+            <MapWindow
+              deviceDetail={null}
+              setDeviceDetail={undefined}
+              defaultTimer={defaultTimer}
+            />
           </CardBody>
         </Card>
         <Box>
@@ -67,7 +66,7 @@ export const MapPage = () => {
           <Card shadow={"2xl"} mt={5}>
             <CardBody>
               <HStack>
-                <Text>Update Frequency: {timeFrequency / 1000} s</Text>
+                <Text>Update Frequency: {getTimeFrequency() / 1000} s</Text>
                 <Spacer />
                 <IconButton
                   size={"xs"}

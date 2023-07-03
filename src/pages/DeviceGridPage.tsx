@@ -1,14 +1,22 @@
-import { Box, Button, Heading, HStack, Spacer, Stack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Heading,
+  HStack,
+  Spacer,
+  Stack,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { DeviceGrid } from "../components/DeviceGrid";
 import { MdBuild } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-export const DeviceGridPage = () => {
-  const [timer, setTimer] = useState(0);
-
+export const DeviceGridPage = ({ defaultTimer }: { defaultTimer: number }) => {
   const navigate = useNavigate();
 
+  const [timer, setTimer] = useState(0);
   useEffect(() => {
     const interval = setInterval(() => {
       if (timer > 0) {
@@ -16,8 +24,9 @@ export const DeviceGridPage = () => {
       } else {
         setTimer(getTimeFrequency() / 1000);
       }
-    }, 3000);
+    }, 1000);
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timer]);
 
   const getTimeFrequency = () => {
@@ -25,7 +34,7 @@ export const DeviceGridPage = () => {
     if (timer) {
       return parseInt(timer);
     } else {
-      return 2000;
+      return defaultTimer;
     }
   };
 
@@ -35,17 +44,19 @@ export const DeviceGridPage = () => {
         <Stack direction={"row"}>
           <Heading>Devices</Heading>
           <Spacer />
-          <Button
-            mt={10}
-            mr={20}
-            rightIcon={<MdBuild />}
-            onClick={() => navigate("/setup")}
-          >
-            Make setup
-          </Button>
+          <VStack>
+            <Button
+              mt={10}
+              mr={20}
+              rightIcon={<MdBuild />}
+              onClick={() => navigate("/setup")}
+            >
+              Make setup
+            </Button>
+            <Text mr={20}>Next Request: {timer} s</Text>
+          </VStack>
         </Stack>
-        {/* <Text>Next Request: {timer} s</Text> */}
-        <HStack>
+        <HStack alignItems={"start"}>
           <DeviceGrid type="anchor" />
           <DeviceGrid type="tag" />
         </HStack>

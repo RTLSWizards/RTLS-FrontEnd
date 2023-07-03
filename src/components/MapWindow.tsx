@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Box, Skeleton, useToast, Text, Stack } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 
 // LEAFLEET
 import {
@@ -14,17 +15,19 @@ import "leaflet/dist/leaflet.css";
 import cartesiano from "../assets/white.png";
 import userIcon from "../assets/tagIcon.png";
 import sensorIcon from "../assets/sensorIcon.png";
+
 import axiosCloud, { ENDPOINT } from "../features/AxiosCloud";
 import { device, position } from "../features/Interface";
-import { Link } from "react-router-dom";
 import { AxiosError } from "axios";
 
 export const MapWindow = ({
   deviceDetail,
   setDeviceDetail,
+  defaultTimer,
 }: {
   deviceDetail: null | device;
   setDeviceDetail: Dispatch<SetStateAction<device | undefined>> | undefined;
+  defaultTimer: number;
 }) => {
   const mapSettings: {
     crs: L.CRS;
@@ -56,26 +59,32 @@ export const MapWindow = ({
       [7, 8],
     ],
   };
+  const [tagList, setTagList] = useState<device[]>();
+  const [anchorList, setAnchorList] = useState<device[]>();
 
+  const [loading, setLoading] = useState(true);
+  const toast = useToast();
+
+  const [timer, setTimer] = useState(0);
   const getTimeFrequency = () => {
     const timer = localStorage.getItem("refreshingTime");
     if (timer) {
       return parseInt(timer);
     } else {
-      return 2000;
+      return defaultTimer;
     }
   };
 
-  const toast = useToast();
-
-  let tagPositionsList: LatLng[] = [];
-
-  const [loading, setLoading] = useState(true);
-
-  const [tagList, setTagList] = useState<device[]>();
-  const [anchorList, setAnchorList] = useState<device[]>();
-
-  const [timer, setTimer] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (timer > 0) {
+        setTimer(timer - 1);
+      } else {
+        setTimer(getTimeFrequency() / 1000);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [timer]);
 
   const getDevices = async () => {
     if (deviceDetail != null && setDeviceDetail != null) {
@@ -128,6 +137,30 @@ export const MapWindow = ({
     }
   };
 
+  // check if anchors have position x or y == 0
+  const checkZeroPostitions = (device: device) => {
+    if (device.positions[0].x == 0 || device.positions[0].y == 0) {
+      toast({
+        status: "warning",
+        title: "Positions error",
+        description: `the ${device.type} ${device.macAddress} has a position (x, y) pointing to 0, please give a value other than 0`,
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
+  };
+
+  // create a list of positions for tag
+  let tagPositionsList: LatLng[] = [];
+  const savePositions = (positions: position[]) => {
+    for (let index = 0; index < positions.length; index++) {
+      const newPos = new LatLng(positions[index].x, positions[index].y);
+      tagPositionsList.push(newPos);
+    }
+  };
+
+  // update positions by a timer
   useEffect(() => {
     const interval = setInterval(() => {
       getDevices();
@@ -136,45 +169,15 @@ export const MapWindow = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // first update positions
   useEffect(() => {
     getDevices();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const savePositions = (positions: position[]) => {
-    for (let index = 0; index < positions.length; index++) {
-      const newPos = new LatLng(positions[index].x, positions[index].y);
-      tagPositionsList.push(newPos);
-    }
-  };
-
-  const checkZeroPostitions = (device: device) => {
-    if (device.positions[0].x == 0 || device.positions[0].y == 0) {
-      toast({
-        status: "warning",
-        title: "Positions error",
-        description: `il ${device.type} ${device.macAddress} ha una posizione (x, y) che punta a 0, per favore dare un valore diverso da 0`,
-        variant: "solid",
-        duration: 3000,
-        isClosable: true,
-        position: "top-right",
-      });
-    }
-  };
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (timer > 0) {
-        setTimer(timer - 1);
-      } else {
-        setTimer(getTimeFrequency() / 1000);
-      }
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [timer]);
-
   return (
     <>
+      {/* the timer */}
       <Text textAlign={"right"}>Next Request: {timer} s</Text>
 
       {!loading ? (
@@ -186,7 +189,6 @@ export const MapWindow = ({
           maxZoom={0}
           zoomSnap={0.0}
           dragging={false}
-          //   doubleClickZoom={() => disable}
           style={{ width: "100%", height: "90%" }}
         >
           <ImageOverlay
