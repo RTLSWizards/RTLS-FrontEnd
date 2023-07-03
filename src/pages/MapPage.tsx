@@ -16,7 +16,12 @@ import { LegendTable } from "../components/LegendTable";
 import { useState } from "react";
 import { FaEdit } from "react-icons/fa";
 
-export const MapPage = ({ defaultTimer }: { defaultTimer: number }) => {
+export const MapPage = ({
+  getTimeFrequency,
+}: {
+  getTimeFrequency: () => number;
+}) => {
+  // open/close input timer
   const [showInput, setShowInput] = useState(false);
 
   const [inputTimer, setInputTimer] = useState<number>();
@@ -33,17 +38,6 @@ export const MapPage = ({ defaultTimer }: { defaultTimer: number }) => {
     }
   };
 
-  // return time frequency for useEffect
-  const getTimeFrequency = (): number => {
-    const timer = localStorage.getItem("refreshingTime");
-
-    if (timer) {
-      return parseInt(timer);
-    } else {
-      return defaultTimer;
-    }
-  };
-
   return (
     <>
       <Heading>Map</Heading>
@@ -53,7 +47,7 @@ export const MapPage = ({ defaultTimer }: { defaultTimer: number }) => {
             <MapWindow
               deviceDetail={null}
               setDeviceDetail={undefined}
-              defaultTimer={defaultTimer}
+              getTimeFrequency={getTimeFrequency}
             />
           </CardBody>
         </Card>

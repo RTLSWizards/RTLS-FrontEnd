@@ -13,10 +13,15 @@ import { MdBuild } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-export const DeviceGridPage = ({ defaultTimer }: { defaultTimer: number }) => {
+export const DeviceGridPage = ({
+  getTimeFrequency,
+}: {
+  getTimeFrequency: () => number;
+}) => {
   const navigate = useNavigate();
 
   const [timer, setTimer] = useState(0);
+
   useEffect(() => {
     const interval = setInterval(() => {
       if (timer > 0) {
@@ -28,15 +33,6 @@ export const DeviceGridPage = ({ defaultTimer }: { defaultTimer: number }) => {
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timer]);
-
-  const getTimeFrequency = () => {
-    const timer = localStorage.getItem("refreshingTime");
-    if (timer) {
-      return parseInt(timer);
-    } else {
-      return defaultTimer;
-    }
-  };
 
   return (
     <>

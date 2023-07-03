@@ -35,7 +35,11 @@ import { DrawerForm } from "../components/DrawerForm";
 import { AxiosError } from "axios";
 import { WarningIcon } from "@chakra-ui/icons";
 
-export const DevicePage = ({ defaultTimer }: { defaultTimer: number }) => {
+export const DevicePage = ({
+  getTimeFrequency,
+}: {
+  getTimeFrequency: () => number;
+}) => {
   const [singleDevice, setSingleDevice] = useState<device>();
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -189,7 +193,7 @@ export const DevicePage = ({ defaultTimer }: { defaultTimer: number }) => {
             <MapWindow
               deviceDetail={singleDevice}
               setDeviceDetail={setSingleDevice}
-              defaultTimer={defaultTimer}
+              getTimeFrequency={getTimeFrequency}
             />
           ) : (
             <>

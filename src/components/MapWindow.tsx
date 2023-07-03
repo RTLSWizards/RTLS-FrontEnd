@@ -23,11 +23,11 @@ import { AxiosError } from "axios";
 export const MapWindow = ({
   deviceDetail,
   setDeviceDetail,
-  defaultTimer,
+  getTimeFrequency,
 }: {
   deviceDetail: null | device;
   setDeviceDetail: Dispatch<SetStateAction<device | undefined>> | undefined;
-  defaultTimer: number;
+  getTimeFrequency: () => number;
 }) => {
   const mapSettings: {
     crs: L.CRS;
@@ -66,14 +66,6 @@ export const MapWindow = ({
   const toast = useToast();
 
   const [timer, setTimer] = useState(0);
-  const getTimeFrequency = () => {
-    const timer = localStorage.getItem("refreshingTime");
-    if (timer) {
-      return parseInt(timer);
-    } else {
-      return defaultTimer;
-    }
-  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -84,6 +76,7 @@ export const MapWindow = ({
       }
     }, 1000);
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timer]);
 
   const getDevices = async () => {

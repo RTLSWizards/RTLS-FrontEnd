@@ -16,6 +16,17 @@ import { useState } from "react";
 function App() {
   const [defaultTimer] = useState(3000);
 
+  // return time frequency for useEffect
+  const getTimeFrequency = (): number => {
+    const timer = localStorage.getItem("refreshingTime");
+
+    if (timer) {
+      return parseInt(timer);
+    } else {
+      return defaultTimer;
+    }
+  };
+
   return (
     <>
       <ColorModeScript />
@@ -30,15 +41,17 @@ function App() {
               <Route element={<SetupModal />}>
                 <Route
                   path="/"
-                  element={<MapPage defaultTimer={defaultTimer} />}
+                  element={<MapPage getTimeFrequency={getTimeFrequency} />}
                 />
                 <Route
                   path="/device-grid"
-                  element={<DeviceGridPage defaultTimer={defaultTimer} />}
+                  element={
+                    <DeviceGridPage getTimeFrequency={getTimeFrequency} />
+                  }
                 />
                 <Route
                   path="/device-grid/:type/:macAddress"
-                  element={<DevicePage defaultTimer={defaultTimer} />}
+                  element={<DevicePage getTimeFrequency={getTimeFrequency} />}
                 />
               </Route>
             </Route>
