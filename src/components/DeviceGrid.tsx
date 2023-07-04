@@ -142,6 +142,7 @@ export const DeviceGrid = ({ type }: { type: string }) => {
                             size={"xs"}
                             shadow={"md"}
                             borderRadius={"3xl"}
+                            colorScheme="teal"
                             icon={<FaSearch />}
                             aria-label={"detail"}
                             onClick={() =>

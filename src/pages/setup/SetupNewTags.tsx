@@ -11,13 +11,13 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { device } from "../features/Interface";
-import axiosCloud, { ENDPOINT } from "../features/AxiosCloud";
+import { device } from "../../features/Interface";
+import axiosCloud, { ENDPOINT } from "../../features/AxiosCloud";
 import { AxiosError } from "axios";
-import { AddDeviceCard } from "../components/setup/AddDeviceCard";
-import { ConfirmModal } from "../components/setup/ConfirmModal";
+import { AddDeviceCard } from "../../components/setup/AddDeviceCard";
+import { ConfirmModal } from "../../components/setup/ConfirmModal";
 
-export const SetupTag = ({
+export const SetupNewTags = ({
   site,
   setActiveStep,
   activeStep,
@@ -114,7 +114,7 @@ export const SetupTag = ({
             ) : (
               <>
                 <Heading textAlign={"center"}>
-                  Add the new devices to the site{" "}
+                  Add the new tags to the site
                 </Heading>
                 <center>
                   <SimpleGrid columns={5} spacing={5} marginBottom={5}>
@@ -132,7 +132,7 @@ export const SetupTag = ({
                   </SimpleGrid>
                   <Divider />
                   <Heading textAlign={"center"}>
-                    Or dissociate devices to the site
+                    Or dissociate it to the site
                   </Heading>
                   <SimpleGrid columns={5} spacing={5} marginBottom={5}>
                     {deviceSiteList?.map((deviceItem, index) => (

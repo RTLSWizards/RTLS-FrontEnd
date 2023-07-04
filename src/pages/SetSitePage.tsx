@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Heading,
+  Image,
   Select,
   Stack,
   useToast,
@@ -66,7 +67,8 @@ export const SetSitePage = () => {
   return (
     <Stack alignItems={"center"}>
       <>
-        <Box mt={200}>
+        <Box mt={100}>
+          <Image src="../../public/aptar-logo-vector.svg" alt="aptar logo" />
           <Heading textAlign={"center"}>Select the site</Heading>
           <Select
             mt={50}

@@ -28,13 +28,19 @@ export const SiteGrid = ({
   setActiveStep,
   setSite,
   site,
+  loading,
+  setLoading,
+  errorNet,
+  setErrorNet,
 }: {
   setActiveStep: React.Dispatch<React.SetStateAction<number>>;
   setSite: React.Dispatch<React.SetStateAction<string>>;
   site: string | undefined;
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  errorNet: boolean;
+  setErrorNet: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [errorNet, setErrorNet] = useState<boolean>(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const toast = useToast();

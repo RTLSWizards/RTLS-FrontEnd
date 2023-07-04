@@ -45,6 +45,7 @@ export const DeviceGridPage = ({
               mt={10}
               mr={20}
               rightIcon={<MdBuild />}
+              colorScheme="gray"
               onClick={() => navigate("/setup")}
             >
               Make setup

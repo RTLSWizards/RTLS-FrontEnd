@@ -9,7 +9,7 @@ import { MapPage } from "./pages/MapPage";
 import { DeviceGridPage } from "./pages/DeviceGridPage";
 import { DevicePage } from "./pages/DevicePage";
 import { SetupModal } from "./components/setup/SetupModal";
-import { SetupBase } from "./pages/SetupBase";
+import { SetupBase } from "./pages/setup/SetupBase";
 import { SetSitePage } from "./pages/SetSitePage";
 import { useState } from "react";
 

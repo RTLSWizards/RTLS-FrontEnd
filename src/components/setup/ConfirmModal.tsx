@@ -23,12 +23,16 @@ export const ConfirmModal = ({
   activeStep: number;
 }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Are you sure?</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>Once confirmed the anchors will activate</ModalBody>
+        <ModalBody>
+          Once confirmed the
+          {activeStep == 1 || activeStep == 3 ? "anchors" : "tags"} will
+          activate
+        </ModalBody>
         <ModalFooter>
           <Button
             colorScheme="teal"

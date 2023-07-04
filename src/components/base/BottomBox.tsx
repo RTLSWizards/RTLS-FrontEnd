@@ -7,7 +7,6 @@ export const BottomBox = ({ collapse }: { collapse: boolean }) => {
   return (
     <Flex
       shadow={!collapse ? "xl" : "none"}
-      borderColor="gray.100"
       borderRadius="full"
       w="full"
       p={2}
@@ -32,7 +31,7 @@ export const BottomBox = ({ collapse }: { collapse: boolean }) => {
             }}
           >
             <Text fontSize="sm" fontWeight="bold" pb="0" lineHeight={0}>
-              RTLS Wizards
+              Theme
             </Text>
           </Link>
         </Flex>

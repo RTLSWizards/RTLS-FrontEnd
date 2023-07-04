@@ -32,7 +32,7 @@ export const SetupModal = () => {
           <ModalHeader>Eseguire Setup devices?</ModalHeader>
           <ModalCloseButton />
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={navigateToSetup}>
+            <Button colorScheme="teal" mr={3} onClick={navigateToSetup}>
               Esegui il setup
             </Button>
             <Button variant="ghost" onClick={() => setOpen(false)}>

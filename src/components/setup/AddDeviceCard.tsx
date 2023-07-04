@@ -93,7 +93,7 @@ export const AddDeviceCard = ({
               {deviceItem.macAddress}
             </Heading>
             <Button
-              disabled={loading}
+              isLoading={loading}
               size={"xs"}
               onClick={
                 action == "add"

@@ -8,11 +8,11 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { DeviceCard } from "../components/setup/DeviceCard";
-import { ConfirmModal } from "../components/setup/ConfirmModal";
+import { DeviceCard } from "../../components/setup/DeviceCard";
+import { ConfirmModal } from "../../components/setup/ConfirmModal";
 import { useEffect, useState } from "react";
-import { device } from "../features/Interface";
-import axiosCloud, { ENDPOINT } from "../features/AxiosCloud";
+import { device } from "../../features/Interface";
+import axiosCloud, { ENDPOINT } from "../../features/AxiosCloud";
 import { AxiosError } from "axios";
 import { WarningIcon } from "@chakra-ui/icons";
 
@@ -62,6 +62,7 @@ export const SetupDevices = ({
 
   useEffect(() => {
     getDeviceList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -87,9 +88,7 @@ export const SetupDevices = ({
               </>
             ) : (
               <>
-                <Heading textAlign={"center"}>
-                  Esegui il setup dei dispositivi
-                </Heading>
+                <Heading textAlign={"center"}>Set anchors positions</Heading>
                 <center>
                   <SimpleGrid columns={5} spacing={5} marginBottom={5}>
                     {deviceList?.map((deviceItem, index) => (
@@ -109,7 +108,7 @@ export const SetupDevices = ({
                     onClick={onOpen}
                     m={5}
                   >
-                    Conferma
+                    Confirm
                   </Button>
                 </center>
               </>

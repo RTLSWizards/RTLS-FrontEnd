@@ -121,13 +121,26 @@ export const DevicePage = ({
             </Heading>
             <Spacer />
             {param.type == "anchor" ? (
-              <Button
-                colorScheme="yellow"
-                rightIcon={<WarningIcon />}
-                onClick={() => openDissasociateModal()}
-              >
-                Dissociate from Site
-              </Button>
+              <>
+                <Button
+                  colorScheme="yellow"
+                  rightIcon={<WarningIcon />}
+                  onClick={() => openDissasociateModal()}
+                >
+                  Dissociate
+                </Button>
+                {singleDevice?.type == "anchor" ? (
+                  <IconButton
+                    icon={<FaEdit />}
+                    aria-label={"edit"}
+                    colorScheme="teal"
+                    rounded={"3xl"}
+                    onClick={() => openFormDrawer()}
+                  />
+                ) : (
+                  <></>
+                )}
+              </>
             ) : (
               <></>
             )}
@@ -163,16 +176,6 @@ export const DevicePage = ({
                   ? `${singleDevice?.positions[0].y.toFixed(2)}`
                   : "NaN"}
               </Text>
-            )}
-            {singleDevice?.type == "anchor" ? (
-              <IconButton
-                icon={<FaEdit />}
-                aria-label={"edit"}
-                rounded={"3xl"}
-                onClick={() => openFormDrawer()}
-              />
-            ) : (
-              <></>
             )}
           </HStack>
           <HStack>
@@ -221,8 +224,9 @@ export const DevicePage = ({
               <ModalHeader>Modal Title</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                Are you sure? to reconnect this device in the future you will
-                need to go through the Setup process.
+                You are dissociating the anchor from the site. Are you sure? to
+                reconnect this device in the future you will need to go through
+                the Setup process.
               </ModalBody>
               <ModalFooter>
                 <Button

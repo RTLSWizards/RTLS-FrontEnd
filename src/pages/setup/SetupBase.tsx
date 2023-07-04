@@ -20,25 +20,29 @@ import { useState } from "react";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { FaHome } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { SetupNewDevices } from "./SetupNewDevices";
 import { SetupSuccessfull } from "./SetupSuccessfull";
-import { SetupTag } from "./SetupTag";
+import { SetupNewAnchors } from "./SetupNewAnchors";
+import { SetupNewTags } from "./SetupNewTags";
+import { SetupDevices } from "./SetupDevices";
 
 export const SetupBase = () => {
   const navigate = useNavigate();
   const [site, setSite] = useState<string>("");
   const steps = [
-    { title: "Site", description: "Select a site" },
-    { title: "Setup new Anchors", description: "" },
-    { title: "Setup positions Anchors", description: "" },
-    { title: "Setup tags", description: "" },
-    { title: "Review", description: "Review" },
+    { title: "Site" },
+    { title: "Anchors" },
+    { title: "Tags" },
+    { title: "Positions" },
+    { title: "Review" },
   ];
 
   const { activeStep, setActiveStep } = useSteps({
     index: -1,
     count: steps.length,
   });
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const [errorNet, setErrorNet] = useState<boolean>(false);
 
   const checkActiveStep = () => {
     switch (activeStep) {
@@ -50,11 +54,15 @@ export const SetupBase = () => {
             setActiveStep={setActiveStep}
             setSite={setSite}
             site={site}
+            loading={loading}
+            setLoading={setLoading}
+            errorNet={errorNet}
+            setErrorNet={setErrorNet}
           />
         );
       case 1:
         return (
-          <SetupNewDevices
+          <SetupNewAnchors
             site={site}
             activeStep={activeStep}
             setActiveStep={setActiveStep}
@@ -62,7 +70,7 @@ export const SetupBase = () => {
         );
       case 2:
         return (
-          <SetupTag
+          <SetupNewTags
             site={site}
             activeStep={activeStep}
             setActiveStep={setActiveStep}
@@ -70,7 +78,7 @@ export const SetupBase = () => {
         );
       case 3:
         return (
-          <SetupTag
+          <SetupDevices
             site={site}
             activeStep={activeStep}
             setActiveStep={setActiveStep}
@@ -84,7 +92,7 @@ export const SetupBase = () => {
   };
 
   return (
-    <Box w={"100%"} h={activeStep != 1 ? "90vh" : "full"} minH={"90vh"}>
+    <Box w={"100%"} h={"90vh"} minH={"90vh"}>
       <Box shadow={"2xl"} borderRadius="3xl" m={30} h={"full"}>
         <Stepper index={activeStep} m={50} pt={50}>
           {steps.map((step, index) => (
