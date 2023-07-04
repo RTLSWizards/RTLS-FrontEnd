@@ -97,7 +97,7 @@ export const SetupTag = ({
           <>
             <Stack h={"70vh"} alignItems={"center"}>
               <WarningIcon w={8} h={8} color="red.500" mt={100} />
-              <Heading mb={5}>Something was wrong!</Heading>
+              <Heading mb={5}>Something went wrong!</Heading>
               <Button colorScheme="red" mb={5} onClick={getDeviceList}>
                 Refresh
               </Button>
