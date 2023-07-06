@@ -43,7 +43,7 @@ export const MapWindow = ({
       iconUrl: userIcon,
       iconSize: [35, 35],
       iconAnchor: [18, 32],
-      popupAnchor: [18, 5],
+      popupAnchor: [0.5, -25],
     }),
     sensorMarker: L.icon({
       iconUrl: sensorIcon,

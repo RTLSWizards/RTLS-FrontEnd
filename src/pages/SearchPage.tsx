@@ -88,7 +88,24 @@ export const SearchPage = () => {
           size="md"
           type="datetime-local"
         />
-
+        <Input
+          placeholder="Select Date and Time"
+          size="md"
+          type="datetime-local"
+        />
+        <Select
+          variant={"filled"}
+          placeholder="ex. Machine 123"
+          onChange={(e) => {
+            setSite(e.target.value);
+          }}
+        >
+          {siteList?.map((site, index) => (
+            <option key={index} value={site.name}>
+              {site.name}
+            </option>
+          ))}
+        </Select>
         <Button colorScheme="teal" onClick={handleSubmit} isLoading={loading}>
           Search
         </Button>
