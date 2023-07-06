@@ -189,15 +189,10 @@ export const SiteGrid = ({
           </DrawerBody>
 
           <DrawerFooter>
-            <Button
-              variant="outline"
-              isLoading={loading}
-              mr={3}
-              onClick={onClose}
-            >
+            <Button variant="outline" mr={3} onClick={onClose}>
               Cancel
             </Button>
-            <Button colorScheme="blue" onClick={handleAdd}>
+            <Button colorScheme="blue" isLoading={loading} onClick={handleAdd}>
               Save
             </Button>
           </DrawerFooter>
