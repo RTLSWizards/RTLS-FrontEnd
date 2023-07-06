@@ -13,6 +13,15 @@ import {
   StepTitle,
   Stepper,
   useSteps,
+  Button,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { SetupPage } from "./SetupPage";
 import { SetupSite } from "./SetupSite";
@@ -24,9 +33,9 @@ import { SetupSuccessfull } from "./SetupSuccessfull";
 import { SetupNewAnchors } from "./SetupNewAnchors";
 import { SetupNewTags } from "./SetupNewTags";
 import { SetupDevices } from "./SetupDevices";
+import { ConfirmModalProps } from "../../features/Interface";
 
 export const SetupBase = () => {
-  const navigate = useNavigate();
   const [site, setSite] = useState<string>("");
   const steps = [
     { title: "Site" },
@@ -43,6 +52,8 @@ export const SetupBase = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [errorNet, setErrorNet] = useState<boolean>(false);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const checkActiveStep = () => {
     switch (activeStep) {
@@ -129,13 +140,42 @@ export const SetupBase = () => {
             aria-label={"back"}
             icon={<FaHome />}
             mr={10}
-            onClick={() => {
-              navigate("/");
-            }}
+            onClick={onOpen}
           />
         </HStack>
         <Center>{checkActiveStep()}</Center>
       </Box>
+      <HomeModal isOpen={isOpen} onClose={onClose} />
     </Box>
+  );
+};
+
+const HomeModal = (props: ConfirmModalProps) => {
+  const navigate = useNavigate();
+  return (
+    <Modal isOpen={props.isOpen} onClose={props.onClose} isCentered>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Are you sure?</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          Once you exit you will have to start the setup over again
+        </ModalBody>
+        <ModalFooter>
+          <Button
+            colorScheme="teal"
+            mr={3}
+            onClick={() => {
+              navigate("/");
+            }}
+          >
+            Confirm
+          </Button>
+          <Button variant="ghost" onClick={props.onClose}>
+            Back
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 };
