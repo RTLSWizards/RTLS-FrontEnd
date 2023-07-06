@@ -28,7 +28,12 @@ export const NavItem = ({
           rounded={"3xl"}
           variant={"ghost"}
           onClick={() => {
-            navigate(path);
+            if (path === "") {
+              localStorage.removeItem("site");
+              window.location.reload();
+            } else {
+              navigate(path);
+            }
           }}
         >
           {/* Collapsed item */}
@@ -62,10 +67,27 @@ export const NavItem = ({
               fontSize={22}
               m="0"
               onClick={() => {
-                navigate(path);
+                if (path === "") {
+                  localStorage.removeItem("site");
+                  window.location.reload();
+                } else {
+                  navigate(path);
+                }
               }}
             />
-            {!collapse && <NavLink to={path}>{label}</NavLink>}
+            {!collapse && path === "" ? (
+              <NavLink
+                to={path}
+                onClick={() => {
+                  localStorage.removeItem("site");
+                  window.location.reload();
+                }}
+              >
+                {label}
+              </NavLink>
+            ) : (
+              <NavLink to={path}>{label}</NavLink>
+            )}
           </Box>
         </>
       )}
