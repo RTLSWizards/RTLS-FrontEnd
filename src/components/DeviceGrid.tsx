@@ -46,6 +46,11 @@ export const DeviceGrid = ({ type }: { type: string }) => {
     }
   };
 
+  useEffect(() => {
+    getDevice();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const getDevice = async () => {
     await axiosCloud
       .get(

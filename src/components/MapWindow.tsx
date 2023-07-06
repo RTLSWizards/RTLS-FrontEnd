@@ -102,7 +102,7 @@ export const MapWindow = ({
         });
     } else {
       await axiosCloud
-        .get(ENDPOINT.tag)
+        .get(ENDPOINT.tag + "/site/" + localStorage.getItem("site"))
         .then((result) => {
           let resultFiltered: device[] = result.data;
           resultFiltered = resultFiltered.filter((tag) => tag.positions[0]);
@@ -120,13 +120,15 @@ export const MapWindow = ({
             });
           }
         });
-      await axiosCloud.get(ENDPOINT.anchor).then((result) => {
-        setAnchorList(result.data);
-        setLoading(false);
+      await axiosCloud
+        .get(ENDPOINT.anchor + "/site/" + localStorage.getItem("site"))
+        .then((result) => {
+          setAnchorList(result.data);
+          setLoading(false);
 
-        const checked: device[] = result.data;
-        checked.map((anchor) => checkZeroPostitions(anchor));
-      });
+          const checked: device[] = result.data;
+          checked.map((anchor) => checkZeroPostitions(anchor));
+        });
     }
   };
 
