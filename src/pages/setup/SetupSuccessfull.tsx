@@ -8,7 +8,7 @@ export const SetupSuccessfull = () => {
     <Stack h={"70vh"} alignItems={"center"}>
       <CheckIcon w={8} h={8} color="teal" mt={100} />
       <Heading mb={5}>Devices succesfully setted!</Heading>
-      <Button colorScheme="teal" mb={5} onClick={() => navigate(-1)}>
+      <Button colorScheme="teal" mb={5} onClick={() => navigate("/")}>
         Dashboard
       </Button>
     </Stack>
