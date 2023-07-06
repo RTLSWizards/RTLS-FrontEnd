@@ -80,6 +80,7 @@ export const NavItem = ({
                 to={path}
                 onClick={() => {
                   localStorage.removeItem("site");
+                  localStorage.removeItem("isSetted");
                   window.location.reload();
                 }}
               >

@@ -46,7 +46,10 @@ export const DeviceGridPage = ({
               mr={20}
               rightIcon={<MdBuild />}
               colorScheme="gray"
-              onClick={() => navigate("/setup")}
+              onClick={() => {
+                localStorage.removeItem("isSetted");
+                navigate("/setup");
+              }}
             >
               Make setup
             </Button>
