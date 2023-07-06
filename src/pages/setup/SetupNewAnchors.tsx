@@ -14,23 +14,29 @@ import { useEffect, useState } from "react";
 import { device } from "../../features/Interface";
 import axiosCloud, { ENDPOINT } from "../../features/AxiosCloud";
 import { AxiosError } from "axios";
-import { WarningIcon } from "@chakra-ui/icons";
 import { AddDeviceCard } from "../../components/setup/AddDeviceCard";
+import { ErrorNetElement } from "../../components/ErrorNetElement";
 
 export const SetupNewAnchors = ({
   site,
   setActiveStep,
   activeStep,
+  loading,
+  setLoading,
+  errorNet,
+  setErrorNet,
 }: {
   site: string | undefined;
   setActiveStep: React.Dispatch<React.SetStateAction<number>>;
   activeStep: number;
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  errorNet: boolean;
+  setErrorNet: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [deviceList, setDeviceList] = useState<device[]>();
   const [deviceSiteList, setDeviceSiteList] = useState<device[]>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [errorNet, setErrorNet] = useState<boolean>(false);
 
   const toast = useToast();
 
@@ -92,16 +98,10 @@ export const SetupNewAnchors = ({
 
   return (
     <>
-      <Stack alignItems={"center"}>
+      <Stack>
         {errorNet ? (
           <>
-            <Stack h={"70vh"} alignItems={"center"}>
-              <WarningIcon w={8} h={8} color="red.500" mt={100} />
-              <Heading mb={5}>Something was wrong!</Heading>
-              <Button colorScheme="red" mb={5} onClick={getDeviceList}>
-                Refresh
-              </Button>
-            </Stack>
+            <ErrorNetElement api={getDeviceList} />
           </>
         ) : (
           <>

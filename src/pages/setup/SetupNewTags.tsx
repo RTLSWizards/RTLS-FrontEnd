@@ -1,4 +1,3 @@
-import { WarningIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -16,6 +15,7 @@ import axiosCloud, { ENDPOINT } from "../../features/AxiosCloud";
 import { AxiosError } from "axios";
 import { AddDeviceCard } from "../../components/setup/AddDeviceCard";
 import { ConfirmModal } from "../../components/setup/ConfirmModal";
+import { ErrorNetElement } from "../../components/ErrorNetElement";
 
 export const SetupNewTags = ({
   site,
@@ -95,13 +95,7 @@ export const SetupNewTags = ({
       <Stack alignItems={"center"}>
         {errorNet ? (
           <>
-            <Stack h={"70vh"} alignItems={"center"}>
-              <WarningIcon w={8} h={8} color="red.500" mt={100} />
-              <Heading mb={5}>Something was wrong!</Heading>
-              <Button colorScheme="red" mb={5} onClick={getDeviceList}>
-                Refresh
-              </Button>
-            </Stack>
+            <ErrorNetElement api={getDeviceList} />
           </>
         ) : (
           <>

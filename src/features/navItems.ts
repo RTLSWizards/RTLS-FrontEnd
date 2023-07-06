@@ -1,5 +1,5 @@
 import { SiGooglemaps } from "react-icons/si";
-import { HiTag } from "react-icons/hi";
+import { HiSearch, HiTag } from "react-icons/hi";
 
 export const items = [
   {
@@ -11,5 +11,10 @@ export const items = [
     label: "Devices",
     icon: HiTag,
     path: "/device-grid",
+  },
+  {
+    label: "Search Rec",
+    icon: HiSearch,
+    path: "/Search",
   },
 ];

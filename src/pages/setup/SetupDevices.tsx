@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 import { device } from "../../features/Interface";
 import axiosCloud, { ENDPOINT } from "../../features/AxiosCloud";
 import { AxiosError } from "axios";
-import { WarningIcon } from "@chakra-ui/icons";
+import { ErrorNetElement } from "../../components/ErrorNetElement";
 
 export const SetupDevices = ({
   site,
@@ -69,15 +69,7 @@ export const SetupDevices = ({
     <>
       <Stack alignItems={"center"}>
         {errorNet ? (
-          <>
-            <Stack h={"70vh"} alignItems={"center"}>
-              <WarningIcon w={8} h={8} color="red.500" mt={100} />
-              <Heading mb={5}>Something was wrong!</Heading>
-              <Button colorScheme="red" mb={5} onClick={getDeviceList}>
-                Refresh
-              </Button>
-            </Stack>
-          </>
+          <ErrorNetElement api={getDeviceList} />
         ) : (
           <>
             {loading ? (

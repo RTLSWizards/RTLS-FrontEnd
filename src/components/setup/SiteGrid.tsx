@@ -22,7 +22,7 @@ import { useEffect, useState } from "react";
 import axiosCloud, { ENDPOINT } from "../../features/AxiosCloud";
 import { Site } from "../../features/Interface";
 import { AxiosError } from "axios";
-import { WarningIcon } from "@chakra-ui/icons";
+import { ErrorNetElement } from "../ErrorNetElement";
 
 export const SiteGrid = ({
   setActiveStep,
@@ -48,11 +48,11 @@ export const SiteGrid = ({
   const [siteList, setSiteList] = useState<Site[]>();
   const [name, setName] = useState<string>();
 
-  const getSiteList = () => {
+  const getSiteList = async () => {
     setErrorNet(false);
     setLoading(true);
 
-    axiosCloud
+    await axiosCloud
       .get(ENDPOINT.site)
       .then((res) => {
         setSiteList(res.data);
@@ -121,7 +121,9 @@ export const SiteGrid = ({
   };
 
   useEffect(
-    () => getSiteList(),
+    () => {
+      getSiteList();
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
@@ -129,11 +131,7 @@ export const SiteGrid = ({
     <Stack alignItems={"center"}>
       {errorNet ? (
         <>
-          <WarningIcon w={8} h={8} color="red.500" mt={100} />
-          <Heading mb={5}>Something was wrong!</Heading>
-          <Button colorScheme="red" mb={5} onClick={getSiteList}>
-            Refresh
-          </Button>
+          <ErrorNetElement api={getSiteList} />
         </>
       ) : (
         <>

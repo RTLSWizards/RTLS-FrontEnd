@@ -12,6 +12,7 @@ import { SetupModal } from "./components/setup/SetupModal";
 import { SetupBase } from "./pages/setup/SetupBase";
 import { SetSitePage } from "./pages/SetSitePage";
 import { useState } from "react";
+import { SearchPage } from "./pages/SearchPage";
 
 function App() {
   const [defaultTimer] = useState(3000);
@@ -53,6 +54,7 @@ function App() {
                   path="/device-grid/:type/:macAddress"
                   element={<DevicePage getTimeFrequency={getTimeFrequency} />}
                 />
+                <Route path="/search" element={<SearchPage />} />
               </Route>
             </Route>
             <Route path="/setup" element={<SetupBase />}></Route>

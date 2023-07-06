@@ -66,6 +66,10 @@ export const SetupBase = () => {
             site={site}
             activeStep={activeStep}
             setActiveStep={setActiveStep}
+            loading={loading}
+            setLoading={setLoading}
+            errorNet={errorNet}
+            setErrorNet={setErrorNet}
           />
         );
       case 2:
