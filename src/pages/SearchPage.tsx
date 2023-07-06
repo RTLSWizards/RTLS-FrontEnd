@@ -1,9 +1,8 @@
 import {
-  Box,
   Button,
   HStack,
   Heading,
-  Image,
+  Input,
   Select,
   Stack,
   useToast,
@@ -17,6 +16,7 @@ export const SearchPage = () => {
   const [site, setSite] = useState("");
 
   const [siteList, setSiteList] = useState<Site[]>();
+  const [recordList, setRecordList] = useState<Site[]>();
 
   const [loading, setLoading] = useState<boolean>(false);
   const toast = useToast();
@@ -83,6 +83,12 @@ export const SearchPage = () => {
             </option>
           ))}
         </Select>
+        <Input
+          placeholder="Select Date and Time"
+          size="md"
+          type="datetime-local"
+        />
+
         <Button colorScheme="teal" onClick={handleSubmit} isLoading={loading}>
           Search
         </Button>

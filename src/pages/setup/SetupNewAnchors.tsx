@@ -101,17 +101,7 @@ export const SetupNewAnchors = ({
       <Stack>
         {errorNet ? (
           <>
-<<<<<<< HEAD:src/pages/setup/SetupNewAnchors.tsx
             <ErrorNetElement api={getDeviceList} />
-=======
-            <Stack h={"70vh"} alignItems={"center"}>
-              <WarningIcon w={8} h={8} color="red.500" mt={100} />
-              <Heading mb={5}>Something went wrong!</Heading>
-              <Button colorScheme="red" mb={5} onClick={getDeviceList}>
-                Refresh
-              </Button>
-            </Stack>
->>>>>>> 92d9b7c7417a73bf9b019b03bcdc30dd4eb45878:src/pages/SetupNewDevices.tsx
           </>
         ) : (
           <>
