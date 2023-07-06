@@ -87,13 +87,20 @@ export const DevicePage = ({
   };
 
   const dissociateAnchorFromSite = async () => {
+    setLoading(true);
     await axiosCloud
-      .put(ENDPOINT.anchor + "/dissociate/" + param.macAddress)
+      .put(
+        (singleDevice?.type == "anchor" ? ENDPOINT.anchor : ENDPOINT.tag) +
+          "/dissociate/" +
+          param.macAddress
+      )
       .then(() => {
         navigate(-1);
+        setLoading(false);
       })
       .catch((error: AxiosError) => {
         if (error.message == "Network Error") {
+          setLoading(false);
           toast({
             status: "error",
             title: "Server Error",
@@ -120,27 +127,23 @@ export const DevicePage = ({
               {param.type == "anchor" ? "Anchor Detail" : "Tag Detail"}
             </Heading>
             <Spacer />
-            {param.type == "anchor" ? (
-              <>
-                <Button
-                  colorScheme="yellow"
-                  rightIcon={<WarningIcon />}
-                  onClick={() => openDissasociateModal()}
-                >
-                  Dissociate
-                </Button>
-                {singleDevice?.type == "anchor" ? (
-                  <IconButton
-                    icon={<FaEdit />}
-                    aria-label={"edit"}
-                    colorScheme="teal"
-                    rounded={"3xl"}
-                    onClick={() => openFormDrawer()}
-                  />
-                ) : (
-                  <></>
-                )}
-              </>
+            <>
+              <Button
+                colorScheme="yellow"
+                rightIcon={<WarningIcon />}
+                onClick={() => openDissasociateModal()}
+              >
+                Dissociate
+              </Button>
+            </>
+            {singleDevice?.type == "anchor" ? (
+              <IconButton
+                icon={<FaEdit />}
+                aria-label={"edit"}
+                colorScheme="teal"
+                rounded={"3xl"}
+                onClick={() => openFormDrawer()}
+              />
             ) : (
               <></>
             )}
@@ -233,6 +236,7 @@ export const DevicePage = ({
                   colorScheme="yellow"
                   mr={3}
                   onClick={() => dissociateAnchorFromSite()}
+                  isLoading={loading}
                 >
                   Dissociate
                 </Button>
