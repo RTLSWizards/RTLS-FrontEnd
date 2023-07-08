@@ -12,6 +12,7 @@ import { DeviceGrid } from "../components/DeviceGrid";
 import { MdBuild } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { WarningIcon } from "@chakra-ui/icons";
 
 export const DeviceGridPage = ({
   getTimeFrequency,
@@ -41,18 +42,31 @@ export const DeviceGridPage = ({
           <Heading>Devices</Heading>
           <Spacer />
           <VStack>
-            <Button
-              mt={10}
-              mr={20}
-              rightIcon={<MdBuild />}
-              colorScheme="gray"
-              onClick={() => {
-                localStorage.removeItem("isSetted");
-                navigate("/setup");
-              }}
-            >
-              Make setup
-            </Button>
+            <HStack>
+              <Button
+                mt={10}
+                rightIcon={<WarningIcon />}
+                colorScheme="yellow"
+                onClick={() => {
+                  navigate("/setup");
+                }}
+              >
+                Dissociate all devices
+              </Button>
+              <Button
+                mt={10}
+                mr={20}
+                rightIcon={<MdBuild />}
+                colorScheme="gray"
+                onClick={() => {
+                  localStorage.removeItem("isSetted");
+                  navigate("/setup");
+                }}
+              >
+                New setup
+              </Button>
+            </HStack>
+
             <Text mr={20}>Next Request: {timer} s</Text>
           </VStack>
         </Stack>
