@@ -2,11 +2,11 @@ import {
   Box,
   Button,
   Divider,
+  HStack,
   Heading,
   SimpleGrid,
   Spinner,
   Stack,
-  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
@@ -14,7 +14,6 @@ import { device } from "../../features/Interface";
 import axiosCloud, { ENDPOINT } from "../../features/AxiosCloud";
 import { AxiosError } from "axios";
 import { AddDeviceCard } from "../../components/setup/AddDeviceCard";
-import { ConfirmModal } from "../../components/setup/ConfirmModal";
 import { ErrorNetElement } from "../../components/ErrorNetElement";
 
 export const SetupNewTags = ({
@@ -26,7 +25,6 @@ export const SetupNewTags = ({
   setActiveStep: React.Dispatch<React.SetStateAction<number>>;
   activeStep: number;
 }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const [deviceList, setDeviceList] = useState<device[]>();
   const [deviceSiteList, setDeviceSiteList] = useState<device[]>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -106,64 +104,83 @@ export const SetupNewTags = ({
                 </Stack>
               </>
             ) : (
-              <>
-                <Heading textAlign={"center"}>
-                  Add the new tags to the site
-                </Heading>
-                <center>
-                  <SimpleGrid columns={5} spacing={5} marginBottom={5}>
-                    {deviceList?.map((deviceItem, index) => (
-                      <Box key={index}>
-                        <AddDeviceCard
-                          deviceItem={deviceItem}
-                          action={"add"}
-                          site={site}
-                          getDeviceList={() => getDeviceList()}
-                          getDeviceSiteList={() => getDeviceSiteList()}
-                        />
-                      </Box>
-                    ))}
-                  </SimpleGrid>
-                  <Divider />
-                  <Heading textAlign={"center"}>
-                    Or dissociate it to the site
-                  </Heading>
-                  <SimpleGrid columns={5} spacing={5} marginBottom={5}>
-                    {deviceSiteList?.map((deviceItem, index) => (
-                      <Box key={index}>
-                        <AddDeviceCard
-                          deviceItem={deviceItem}
-                          action={"disassociate"}
-                          site={site}
-                          getDeviceList={() => getDeviceList()}
-                          getDeviceSiteList={() => getDeviceSiteList()}
-                        />
-                      </Box>
-                    ))}
-                  </SimpleGrid>
-                  <Button
-                    variant={"solid"}
-                    colorScheme="leaf"
-                    size={"lg"}
-                    backgroundColor="#559c8b"
-                    onClick={onOpen}
-                    m={5}
-                  >
-                    Confirm
-                  </Button>
-                </center>
-              </>
+              <HStack>
+                <Box m={50}>
+                  {deviceList?.length != 0 ? (
+                    <>
+                      <Heading textAlign={"center"}>New tags</Heading>
+                      <SimpleGrid columns={4} spacing={5} marginBottom={5}>
+                        {deviceList?.map((deviceItem, index) => (
+                          <Box key={index}>
+                            <AddDeviceCard
+                              deviceItem={deviceItem}
+                              action={"add"}
+                              site={site}
+                              getDeviceList={() => getDeviceList()}
+                              getDeviceSiteList={() => getDeviceSiteList()}
+                            />
+                          </Box>
+                        ))}
+                      </SimpleGrid>
+                    </>
+                  ) : (
+                    <>
+                      {" "}
+                      <Heading textAlign={"center"} color={"gray"} mt={50}>
+                        No new tags{" "}
+                      </Heading>
+                    </>
+                  )}
+                </Box>
+                <Box height="50vh">
+                  <Divider orientation="vertical" />
+                </Box>
+                <Box>
+                  {deviceSiteList?.length != 0 ? (
+                    <>
+                      <Heading textAlign={"center"}>Actived Tags</Heading>
+                      <SimpleGrid columns={4} spacing={5} marginBottom={5}>
+                        {deviceSiteList?.map((deviceItem, index) => (
+                          <Box key={index}>
+                            <AddDeviceCard
+                              deviceItem={deviceItem}
+                              action={"disassociate"}
+                              site={site}
+                              getDeviceList={() => getDeviceList()}
+                              getDeviceSiteList={() => getDeviceSiteList()}
+                            />
+                          </Box>
+                        ))}
+                      </SimpleGrid>
+                    </>
+                  ) : (
+                    <>
+                      {" "}
+                      <Heading textAlign={"center"} color={"gray"} mt={50}>
+                        No new anchors{" "}
+                      </Heading>
+                    </>
+                  )}
+                </Box>
+                <Button
+                  variant={"solid"}
+                  colorScheme="teal"
+                  size={"lg"}
+                  backgroundColor="#559c8b"
+                  m={5}
+                  onClick={() => {
+                    if (site != undefined) {
+                      setActiveStep(activeStep + 1);
+                    }
+                  }}
+                >
+                  Confirm
+                </Button>
+              </HStack>
             )}
           </>
         )}
       </Stack>
-      <ConfirmModal
-        isOpen={isOpen}
-        onClose={onClose}
-        setActiveStep={setActiveStep}
-        site={site}
-        activeStep={activeStep}
-      />
     </>
   );
 };

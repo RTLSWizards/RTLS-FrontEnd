@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Divider,
+  HStack,
   Heading,
   SimpleGrid,
   Spinner,
@@ -113,45 +114,75 @@ export const SetupNewAnchors = ({
               </>
             ) : (
               <>
-                <Heading textAlign={"center"}>
-                  Add the new anchors to the site{" "}
-                </Heading>
+                <HStack>
+                  <Box m={50}>
+                    {deviceList?.length != 0 ? (
+                      <>
+                        <Heading textAlign={"center"}>New Anchors </Heading>
+                        <SimpleGrid columns={4} spacing={5} marginBottom={5}>
+                          {deviceList?.map((deviceItem, index) => (
+                            <Box key={index}>
+                              <AddDeviceCard
+                                deviceItem={deviceItem}
+                                action={"add"}
+                                site={site}
+                                getDeviceList={() => getDeviceList()}
+                                getDeviceSiteList={() => getDeviceSiteList()}
+                              />
+                            </Box>
+                          ))}
+                        </SimpleGrid>
+                      </>
+                    ) : (
+                      <>
+                        {" "}
+                        <Heading textAlign={"center"} color={"gray"} mt={50}>
+                          No new anchors{" "}
+                        </Heading>
+                      </>
+                    )}
+                  </Box>
+                  <Box height="50vh">
+                    <Divider orientation="vertical" />
+                  </Box>
+                  {deviceSiteList?.length !== 0 ? (
+                    <Box m={50}>
+                      <Heading textAlign={"center"}>Actived anchors</Heading>
+                      <SimpleGrid columns={4} spacing={5} marginBottom={5}>
+                        {deviceSiteList?.map((deviceItem, index) => (
+                          <Box key={index}>
+                            <AddDeviceCard
+                              deviceItem={deviceItem}
+                              action={"disassociate"}
+                              site={site}
+                              getDeviceList={() => getDeviceList()}
+                              getDeviceSiteList={() => getDeviceSiteList()}
+                            />
+                          </Box>
+                        ))}
+                      </SimpleGrid>
+                    </Box>
+                  ) : (
+                    <>
+                      {" "}
+                      <Heading
+                        textAlign={"center"}
+                        color={"gray"}
+                        mt={50}
+                        ml={50}
+                      >
+                        No setted anchors{" "}
+                      </Heading>
+                    </>
+                  )}
+                </HStack>
                 <center>
-                  <SimpleGrid columns={5} spacing={5} marginBottom={5}>
-                    {deviceList?.map((deviceItem, index) => (
-                      <Box key={index}>
-                        <AddDeviceCard
-                          deviceItem={deviceItem}
-                          action={"add"}
-                          site={site}
-                          getDeviceList={() => getDeviceList()}
-                          getDeviceSiteList={() => getDeviceSiteList()}
-                        />
-                      </Box>
-                    ))}
-                  </SimpleGrid>
-                  <Divider />
-                  <Heading textAlign={"center"}>
-                    Or dissociate it to the site
-                  </Heading>
-                  <SimpleGrid columns={5} spacing={5} marginBottom={5}>
-                    {deviceSiteList?.map((deviceItem, index) => (
-                      <Box key={index}>
-                        <AddDeviceCard
-                          deviceItem={deviceItem}
-                          action={"disassociate"}
-                          site={site}
-                          getDeviceList={() => getDeviceList()}
-                          getDeviceSiteList={() => getDeviceSiteList()}
-                        />
-                      </Box>
-                    ))}
-                  </SimpleGrid>
                   <Button
                     variant={"solid"}
                     colorScheme="leaf"
                     size={"lg"}
                     backgroundColor="#559c8b"
+                    w={500}
                     onClick={onOpen}
                     m={5}
                   >
