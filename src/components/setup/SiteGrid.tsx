@@ -12,6 +12,13 @@ import {
   FormLabel,
   Heading,
   Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Select,
   Spinner,
   Stack,
@@ -20,7 +27,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axiosCloud, { ENDPOINT } from "../../features/AxiosCloud";
-import { Site } from "../../features/Interface";
+import { Site, device } from "../../features/Interface";
 import { AxiosError } from "axios";
 import { ErrorNetElement } from "../ErrorNetElement";
 
@@ -46,7 +53,10 @@ export const SiteGrid = ({
   const toast = useToast();
 
   const [siteList, setSiteList] = useState<Site[]>();
+  const [deviceList, setDeviceList] = useState<device[]>();
   const [name, setName] = useState<string>();
+  const [modal, setModal] = useState<string>();
+  const [dissociateSite, setDissociateSite] = useState("");
 
   const getSiteList = async () => {
     setErrorNet(false);
@@ -61,6 +71,66 @@ export const SiteGrid = ({
       .catch((err: AxiosError) => {
         setLoading(false);
         setErrorNet(true);
+        if (err.message == "Network Error" || err.code == "ERR_NETWORK") {
+          toast({
+            status: "error",
+            title: "Server Error",
+            variant: "solid",
+            duration: 3000,
+            isClosable: true,
+            position: "top-right",
+          });
+        }
+      });
+  };
+
+  const getDeviceNullList = async () => {
+    setErrorNet(false);
+    setLoading(true);
+    await axiosCloud
+      .get(ENDPOINT.anchor + "/site/null")
+      .then((res) => {
+        setDeviceList(res.data);
+        setLoading(false);
+      })
+      .then(() => {
+        if (deviceList?.length === 0) {
+          toast({
+            status: "warning",
+            title: "No new anchors for settings",
+            description: "Dissociate anchors from a site to have some devices",
+            variant: "solid",
+            duration: 3000,
+            isClosable: true,
+            position: "top-right",
+          });
+        }
+      })
+      .catch((err: AxiosError) => {
+        setErrorNet(true);
+        setLoading(false);
+        if (err.message == "Network Error" || err.code == "ERR_NETWORK") {
+          toast({
+            status: "error",
+            title: "Server Error",
+            variant: "solid",
+            duration: 3000,
+            isClosable: true,
+            position: "top-right",
+          });
+        }
+      });
+  };
+
+  const handleDissociate = async () => {
+    await axiosCloud
+      .post(ENDPOINT.anchor + "/site/null")
+      .then((res) => {
+        setLoading(false);
+      })
+      .catch((err: AxiosError) => {
+        setErrorNet(true);
+        setLoading(false);
         if (err.message == "Network Error" || err.code == "ERR_NETWORK") {
           toast({
             status: "error",
@@ -101,7 +171,6 @@ export const SiteGrid = ({
       })
       .then(() => {
         setLoading(false);
-        getSiteList();
         onClose();
       })
       .catch((err: AxiosError) => {
@@ -123,6 +192,7 @@ export const SiteGrid = ({
   useEffect(
     () => {
       getSiteList();
+      getDeviceNullList();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -165,39 +235,99 @@ export const SiteGrid = ({
               </Button>
               <Button
                 width={"100%"}
-                colorScheme="yellow"
-                mb={50}
-                onClick={onOpen}
+                colorScheme="gray"
+                mb={10}
+                onClick={() => {
+                  setModal("drawer");
+                  onOpen();
+                }}
               >
                 Register a new site
+              </Button>
+              <Button
+                width={"100%"}
+                colorScheme="yellow"
+                mb={50}
+                onClick={() => {
+                  setModal("modal");
+                  onOpen();
+                }}
+              >
+                Dissociate a site
               </Button>
             </Box>
           )}
         </>
       )}
 
-      <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerHeader>Register a new site</DrawerHeader>
-          <DrawerBody>
-            <FormControl isRequired>
-              <FormLabel>Site name</FormLabel>
-              <Input onChange={handleName} />
-            </FormControl>
-          </DrawerBody>
+      {modal === "drawer" ? (
+        <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
+          <DrawerOverlay />
+          <DrawerContent>
+            <DrawerCloseButton />
+            <DrawerHeader>Register a new site</DrawerHeader>
+            <DrawerBody>
+              <FormControl isRequired>
+                <FormLabel>Site name</FormLabel>
+                <Input onChange={handleName} />
+              </FormControl>
+            </DrawerBody>
 
-          <DrawerFooter>
-            <Button variant="outline" mr={3} onClick={onClose}>
-              Cancel
-            </Button>
-            <Button colorScheme="blue" isLoading={loading} onClick={handleAdd}>
-              Save
-            </Button>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
+            <DrawerFooter>
+              <Button variant="outline" mr={3} onClick={onClose}>
+                Cancel
+              </Button>
+              <Button
+                colorScheme="blue"
+                isLoading={loading}
+                onClick={handleAdd}
+              >
+                Save
+              </Button>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
+      ) : (
+        <></>
+      )}
+      {modal === "modal" ? (
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Dissociate a site</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <FormControl>
+                <FormLabel>Site</FormLabel>
+                <Select
+                  mt={50}
+                  mb={50}
+                  variant={"filled"}
+                  placeholder="ex. demo site"
+                  onChange={(e) => {
+                    setDissociateSite(e.target.value);
+                  }}
+                >
+                  {siteList?.map((site, index) => (
+                    <option key={index} value={site.name}>
+                      {site.name}
+                    </option>
+                  ))}
+                </Select>
+              </FormControl>
+            </ModalBody>
+
+            <ModalFooter>
+              <Button colorScheme="yellow" mr={3}>
+                Dissociate
+              </Button>
+              <Button onClick={onClose}>Cancel</Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      ) : (
+        <></>
+      )}
     </Stack>
   );
 };
