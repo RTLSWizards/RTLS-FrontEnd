@@ -3,7 +3,9 @@ import {
   Button,
   Card,
   CardBody,
+  HStack,
   Heading,
+  Icon,
   VStack,
   useToast,
 } from "@chakra-ui/react";
@@ -11,6 +13,8 @@ import { useState } from "react";
 import axiosCloud from "../../features/AxiosCloud";
 import { device } from "../../features/Interface";
 import { AxiosError } from "axios";
+import { HiTag } from "react-icons/hi";
+import { MdSensors } from "react-icons/md";
 
 export const AddDeviceCard = ({
   deviceItem,
@@ -86,12 +90,21 @@ export const AddDeviceCard = ({
 
   return (
     <>
-      <Card m={5}>
+      <Card m={2}>
         <CardBody>
           <VStack>
-            <Heading size="md" as={"i"}>
-              {deviceItem.macAddress}
-            </Heading>
+            <HStack>
+              <Heading size="md" as={"i"}>
+                {deviceItem.type === "tag" ? (
+                  <Icon as={HiTag} />
+                ) : (
+                  <Icon as={MdSensors} />
+                )}
+              </Heading>
+              <Heading size="md" as={"i"}>
+                {deviceItem.macAddress}
+              </Heading>
+            </HStack>
             <Button
               isLoading={loading}
               size={"xs"}
