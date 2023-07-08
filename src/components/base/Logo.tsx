@@ -23,7 +23,7 @@ export const Logo = ({
         onClick={() => navigate("/")}
       >
         <Image
-          src="../../../public/ATR-02d63b4a.png"
+          src="../../../ATR-02d63b4a.png"
           alt="Aptar logo"
           boxSize={22}
           mr={2}
