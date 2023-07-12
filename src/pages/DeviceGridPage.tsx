@@ -7,12 +7,22 @@ import {
   Stack,
   Text,
   VStack,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { DeviceGrid } from "../components/DeviceGrid";
 import { MdBuild } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { WarningIcon } from "@chakra-ui/icons";
+import axiosCloud, { ENDPOINT } from "../features/AxiosCloud";
+import { ConfirmModalProps } from "../features/Interface";
 
 export const DeviceGridPage = ({
   getTimeFrequency,
@@ -22,6 +32,8 @@ export const DeviceGridPage = ({
   const navigate = useNavigate();
 
   const [timer, setTimer] = useState(0);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -47,9 +59,7 @@ export const DeviceGridPage = ({
                 mt={10}
                 rightIcon={<WarningIcon />}
                 colorScheme="yellow"
-                onClick={() => {
-                  navigate("/setup");
-                }}
+                onClick={onOpen}
               >
                 Dissociate all devices
               </Button>
@@ -66,7 +76,6 @@ export const DeviceGridPage = ({
                 New setup
               </Button>
             </HStack>
-
             <Text mr={20}>Next Request: {timer} s</Text>
           </VStack>
         </Stack>
@@ -75,6 +84,37 @@ export const DeviceGridPage = ({
           <DeviceGrid type="tag" />
         </HStack>
       </Box>
+      <DisassociateModal isOpen={isOpen} onClose={onClose} />
     </>
+  );
+};
+
+const DisassociateModal = (props: ConfirmModalProps) => {
+  const disassociateAll = async () => {
+    await axiosCloud
+      .put(ENDPOINT.anchor + "/all/dissociate/" + localStorage.getItem("site"))
+      .then();
+  };
+
+  return (
+    <Modal isOpen={props.isOpen} onClose={props.onClose} isCentered>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Are you sure?</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          Once confirmed, all the anchors will be disassociated from this site:{" "}
+          {localStorage.getItem("site")}
+        </ModalBody>
+        <ModalFooter>
+          <Button colorScheme="yellow" mr={3} onClick={disassociateAll}>
+            Confirm
+          </Button>
+          <Button variant="ghost" onClick={props.onClose}>
+            Cancel
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 };
