@@ -15,6 +15,7 @@ import { MapWindow } from "../components/MapWindow";
 import { LegendTable } from "../components/LegendTable";
 import { useState } from "react";
 import { FaEdit } from "react-icons/fa";
+import { FaCircle } from "react-icons/fa";
 
 export const MapPage = ({
   getTimeFrequency,
@@ -88,6 +89,15 @@ export const MapPage = ({
                 </Button>
               </VStack>
             </CardBody>
+          </Card>
+          <Card marginTop={5}>
+            <Button
+              variant={"solid"}
+              colorScheme={"teal"}
+              rightIcon={<FaCircle />}
+            >
+              Start recording
+            </Button>
           </Card>
         </Box>
       </HStack>

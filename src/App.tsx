@@ -13,6 +13,7 @@ import { SetupBase } from "./pages/setup/SetupBase";
 import { SetSitePage } from "./pages/SetSitePage";
 import { useState } from "react";
 import { SearchPage } from "./pages/SearchPage";
+import { HistoryPage } from "./pages/HistoryPage";
 
 function App() {
   const [defaultTimer] = useState(3000);
@@ -55,6 +56,7 @@ function App() {
                   element={<DevicePage getTimeFrequency={getTimeFrequency} />}
                 />
                 <Route path="/search" element={<SearchPage />} />
+                <Route path="/history" element={<HistoryPage />} />
               </Route>
             </Route>
             <Route path="/setup" element={<SetupBase />}></Route>
