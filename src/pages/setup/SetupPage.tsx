@@ -13,11 +13,11 @@ export const SetupPage = ({
         </Heading>
         <Text marginBottom={3}>
           To start tracking, it is important to place the anchors in the desired
-          points within the area you wish to monitor. Make sure you fiscally
-          measure the size of the room using one metro and enter the correct
-          coordinates of the anchors. The first it is still set by default to
-          (0.1) and remains fixed. Once enter all the information, you will be
-          ready to start the tracking.
+          places within the area you wish to monitor. Make sure you fiscally
+          measure the size of the room using a meter and enter the correct
+          coordinates of the anchors. The first one is still set by default to
+          (0.1) and remains fixed. Once you enter all the information, you will
+          be ready to start the tracking.
         </Text>
         <Button
           colorScheme="teal"

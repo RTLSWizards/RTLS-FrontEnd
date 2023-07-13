@@ -29,14 +29,14 @@ export const SetupModal = () => {
       <Modal isOpen={open} onClose={() => setOpen(false)} isCentered>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Eseguire Setup devices?</ModalHeader>
+          <ModalHeader>Do you want to start the device setup?</ModalHeader>
           <ModalCloseButton />
           <ModalFooter>
             <Button colorScheme="teal" mr={3} onClick={navigateToSetup}>
-              Esegui il setup
+              Start the setup
             </Button>
             <Button variant="ghost" onClick={() => setOpen(false)}>
-              Chiudi
+              Close
             </Button>
           </ModalFooter>
         </ModalContent>

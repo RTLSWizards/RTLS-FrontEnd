@@ -99,7 +99,7 @@ export const SetupNewAnchors = ({
 
   return (
     <>
-      <Stack>
+      <Stack width={"100%"} height={"50vh"}>
         {errorNet ? (
           <>
             <ErrorNetElement api={getDeviceList} />
@@ -114,11 +114,16 @@ export const SetupNewAnchors = ({
               </>
             ) : (
               <>
-                <HStack>
-                  <Box m={50}>
+                <HStack justifyContent={"center"}>
+                  <Box
+                    height={"100%"}
+                    width={"46.6%"}
+                    textAlign={"center"}
+                    paddingInline={3}
+                  >
                     {deviceList?.length != 0 ? (
                       <>
-                        <Heading textAlign={"center"}>New Anchors </Heading>
+                        <Heading marginBottom={5}>New anchors</Heading>
                         <SimpleGrid columns={4} spacing={5} marginBottom={5}>
                           {deviceList?.map((deviceItem, index) => (
                             <Box key={index}>
@@ -142,39 +147,49 @@ export const SetupNewAnchors = ({
                       </>
                     )}
                   </Box>
-                  <Box height="50vh">
-                    <Divider orientation="vertical" />
+                  <Divider
+                    orientation="vertical"
+                    height={"50vh"}
+                    marginRight={"-40px"}
+                  />
+                  <Box
+                    height={"100%"}
+                    width={"46.6%"}
+                    marginLeft={"2.5rem"}
+                    textAlign={"center"}
+                    paddingInline={3}
+                  >
+                    {deviceSiteList?.length !== 0 ? (
+                      <>
+                        <Heading marginBottom={5}>Actived anchors</Heading>
+                        <SimpleGrid columns={4} spacing={5} marginBottom={5}>
+                          {deviceSiteList?.map((deviceItem, index) => (
+                            <Box key={index}>
+                              <AddDeviceCard
+                                deviceItem={deviceItem}
+                                action={"disassociate"}
+                                site={site}
+                                getDeviceList={() => getDeviceList()}
+                                getDeviceSiteList={() => getDeviceSiteList()}
+                              />
+                            </Box>
+                          ))}
+                        </SimpleGrid>
+                      </>
+                    ) : (
+                      <>
+                        {" "}
+                        <Heading
+                          textAlign={"center"}
+                          color={"gray"}
+                          mt={50}
+                          ml={50}
+                        >
+                          No setted anchors{" "}
+                        </Heading>
+                      </>
+                    )}
                   </Box>
-                  {deviceSiteList?.length !== 0 ? (
-                    <Box m={50}>
-                      <Heading textAlign={"center"}>Actived anchors</Heading>
-                      <SimpleGrid columns={4} spacing={5} marginBottom={5}>
-                        {deviceSiteList?.map((deviceItem, index) => (
-                          <Box key={index}>
-                            <AddDeviceCard
-                              deviceItem={deviceItem}
-                              action={"disassociate"}
-                              site={site}
-                              getDeviceList={() => getDeviceList()}
-                              getDeviceSiteList={() => getDeviceSiteList()}
-                            />
-                          </Box>
-                        ))}
-                      </SimpleGrid>
-                    </Box>
-                  ) : (
-                    <>
-                      {" "}
-                      <Heading
-                        textAlign={"center"}
-                        color={"gray"}
-                        mt={50}
-                        ml={50}
-                      >
-                        No setted anchors{" "}
-                      </Heading>
-                    </>
-                  )}
                 </HStack>
                 <center>
                   <Button

@@ -8,6 +8,7 @@ import {
   Spinner,
   Stack,
   useToast,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { device } from "../../features/Interface";
@@ -15,6 +16,7 @@ import axiosCloud, { ENDPOINT } from "../../features/AxiosCloud";
 import { AxiosError } from "axios";
 import { AddDeviceCard } from "../../components/setup/AddDeviceCard";
 import { ErrorNetElement } from "../../components/ErrorNetElement";
+import { ConfirmModal } from "../../components/setup/ConfirmModal";
 
 export const SetupNewTags = ({
   site,
@@ -29,6 +31,8 @@ export const SetupNewTags = ({
   const [deviceSiteList, setDeviceSiteList] = useState<device[]>();
   const [loading, setLoading] = useState<boolean>(false);
   const [errorNet, setErrorNet] = useState<boolean>(false);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const toast = useToast();
 
@@ -90,7 +94,7 @@ export const SetupNewTags = ({
 
   return (
     <>
-      <Stack alignItems={"center"}>
+      <Stack width={"100%"} height={"50vh"}>
         {errorNet ? (
           <>
             <ErrorNetElement api={getDeviceList} />
@@ -104,83 +108,109 @@ export const SetupNewTags = ({
                 </Stack>
               </>
             ) : (
-              <HStack>
-                <Box m={50}>
-                  {deviceList?.length != 0 ? (
-                    <>
-                      <Heading textAlign={"center"}>New tags</Heading>
-                      <SimpleGrid columns={4} spacing={5} marginBottom={5}>
-                        {deviceList?.map((deviceItem, index) => (
-                          <Box key={index}>
-                            <AddDeviceCard
-                              deviceItem={deviceItem}
-                              action={"add"}
-                              site={site}
-                              getDeviceList={() => getDeviceList()}
-                              getDeviceSiteList={() => getDeviceSiteList()}
-                            />
-                          </Box>
-                        ))}
-                      </SimpleGrid>
-                    </>
-                  ) : (
-                    <>
-                      {" "}
-                      <Heading textAlign={"center"} color={"gray"} mt={50}>
-                        No new tags{" "}
-                      </Heading>
-                    </>
-                  )}
-                </Box>
-                <Box height="50vh">
-                  <Divider orientation="vertical" />
-                </Box>
-                <Box>
-                  {deviceSiteList?.length != 0 ? (
-                    <>
-                      <Heading textAlign={"center"}>Actived Tags</Heading>
-                      <SimpleGrid columns={4} spacing={5} marginBottom={5}>
-                        {deviceSiteList?.map((deviceItem, index) => (
-                          <Box key={index}>
-                            <AddDeviceCard
-                              deviceItem={deviceItem}
-                              action={"disassociate"}
-                              site={site}
-                              getDeviceList={() => getDeviceList()}
-                              getDeviceSiteList={() => getDeviceSiteList()}
-                            />
-                          </Box>
-                        ))}
-                      </SimpleGrid>
-                    </>
-                  ) : (
-                    <>
-                      {" "}
-                      <Heading textAlign={"center"} color={"gray"} mt={50}>
-                        No new anchors{" "}
-                      </Heading>
-                    </>
-                  )}
-                </Box>
-                <Button
-                  variant={"solid"}
-                  colorScheme="teal"
-                  size={"lg"}
-                  backgroundColor="#559c8b"
-                  m={5}
-                  onClick={() => {
-                    if (site != undefined) {
-                      setActiveStep(activeStep + 1);
-                    }
-                  }}
-                >
-                  Confirm
-                </Button>
-              </HStack>
+              <>
+                <HStack justifyContent={"center"}>
+                  <Box
+                    height={"100%"}
+                    width={"46.6%"}
+                    textAlign={"center"}
+                    paddingInline={3}
+                  >
+                    {deviceList?.length != 0 ? (
+                      <>
+                        <Heading marginBottom={5}>New tags</Heading>
+                        <SimpleGrid columns={4} spacing={5} marginBottom={5}>
+                          {deviceList?.map((deviceItem, index) => (
+                            <Box key={index}>
+                              <AddDeviceCard
+                                deviceItem={deviceItem}
+                                action={"add"}
+                                site={site}
+                                getDeviceList={() => getDeviceList()}
+                                getDeviceSiteList={() => getDeviceSiteList()}
+                              />
+                            </Box>
+                          ))}
+                        </SimpleGrid>
+                      </>
+                    ) : (
+                      <>
+                        {" "}
+                        <Heading textAlign={"center"} color={"gray"} mt={50}>
+                          No new tags{" "}
+                        </Heading>
+                      </>
+                    )}
+                  </Box>
+                  <Divider
+                    orientation="vertical"
+                    height={"50vh"}
+                    marginRight={"-40px"}
+                  />
+                  <Box
+                    height={"100%"}
+                    width={"46.6%"}
+                    marginLeft={"2.5rem"}
+                    textAlign={"center"}
+                    paddingInline={3}
+                  >
+                    {deviceSiteList?.length !== 0 ? (
+                      <>
+                        <Heading marginBottom={5}>Actived tags</Heading>
+                        <SimpleGrid columns={4} spacing={5} marginBottom={5}>
+                          {deviceSiteList?.map((deviceItem, index) => (
+                            <Box key={index}>
+                              <AddDeviceCard
+                                deviceItem={deviceItem}
+                                action={"disassociate"}
+                                site={site}
+                                getDeviceList={() => getDeviceList()}
+                                getDeviceSiteList={() => getDeviceSiteList()}
+                              />
+                            </Box>
+                          ))}
+                        </SimpleGrid>
+                      </>
+                    ) : (
+                      <>
+                        {" "}
+                        <Heading
+                          textAlign={"center"}
+                          color={"gray"}
+                          mt={50}
+                          ml={50}
+                        >
+                          No setted tags{" "}
+                        </Heading>
+                      </>
+                    )}
+                  </Box>
+                </HStack>
+                <center>
+                  <Button
+                    variant={"solid"}
+                    colorScheme="leaf"
+                    size={"lg"}
+                    backgroundColor="#559c8b"
+                    w={500}
+                    onClick={onOpen}
+                    m={5}
+                  >
+                    Confirm
+                  </Button>
+                </center>
+              </>
             )}
           </>
         )}
       </Stack>
+      <ConfirmModal
+        isOpen={isOpen}
+        onClose={onClose}
+        setActiveStep={setActiveStep}
+        site={site}
+        activeStep={activeStep}
+      />
     </>
   );
 };

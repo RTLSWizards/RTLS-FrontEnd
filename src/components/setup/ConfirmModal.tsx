@@ -30,8 +30,8 @@ export const ConfirmModal = ({
         <ModalCloseButton />
         <ModalBody>
           Once confirmed the
-          {activeStep == 1 || activeStep == 3 ? "anchors" : "tags"} will
-          activate
+          {activeStep == 1 || activeStep == 3 ? " anchors" : " tags"} will be
+          activated
         </ModalBody>
         <ModalFooter>
           <Button
