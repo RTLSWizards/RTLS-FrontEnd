@@ -45,7 +45,7 @@ export const SearchPage = () => {
 
   const handleSubmit = () => {
     if (site != "") {
-      localStorage.setItem("site", site);
+      sessionStorage.setItem("site", site);
       location.reload();
     } else {
       toast({

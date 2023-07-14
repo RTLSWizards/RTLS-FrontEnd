@@ -29,7 +29,7 @@ export const NavItem = ({
           variant={"ghost"}
           onClick={() => {
             if (path === "") {
-              localStorage.removeItem("site");
+              sessionStorage.removeItem("site");
               window.location.reload();
             } else {
               navigate(path);
@@ -68,7 +68,7 @@ export const NavItem = ({
               m="0"
               onClick={() => {
                 if (path === "") {
-                  localStorage.removeItem("site");
+                  sessionStorage.removeItem("site");
                   window.location.reload();
                 } else {
                   navigate(path);
@@ -79,7 +79,7 @@ export const NavItem = ({
               <NavLink
                 to={path}
                 onClick={() => {
-                  localStorage.removeItem("site");
+                  sessionStorage.removeItem("site");
                   localStorage.removeItem("isSetted");
                   window.location.reload();
                 }}

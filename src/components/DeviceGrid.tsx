@@ -56,7 +56,7 @@ export const DeviceGrid = ({ type }: { type: string }) => {
       .get(
         (type == "anchor" ? ENDPOINT.anchor : ENDPOINT.tag) +
           "/site/" +
-          localStorage.getItem("site")
+            sessionStorage.getItem("site")
       )
       .then((result) => {
         setDeviceList(result.data);

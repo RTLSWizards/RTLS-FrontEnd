@@ -37,7 +37,7 @@ function App() {
           <Routes>
             <Route
               element={
-                localStorage.getItem("site") ? <Base /> : <SetSitePage />
+                sessionStorage.getItem("site") ? <Base /> : <SetSitePage />
               }
             >
               <Route element={<SetupModal />}>

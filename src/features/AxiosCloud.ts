@@ -2,7 +2,7 @@ import axios from "axios";
 
 const axiosCloud = axios.create({
   // cambia successivamente con URL cloud
-  baseURL: "http://localhost:7140/api/",
+  baseURL: "http://localhost:7071/api/",
 });
 export default axiosCloud;
 

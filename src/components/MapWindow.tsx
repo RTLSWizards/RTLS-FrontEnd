@@ -102,7 +102,7 @@ export const MapWindow = ({
         });
     } else {
       await axiosCloud
-        .get(ENDPOINT.tag + "/site/" + localStorage.getItem("site"))
+        .get(ENDPOINT.tag + "/site/" + sessionStorage.getItem("site"))
         .then((result) => {
           let resultFiltered: device[] = result.data;
           resultFiltered = resultFiltered.filter((tag) => tag.positions[0]);
@@ -121,7 +121,7 @@ export const MapWindow = ({
           }
         });
       await axiosCloud
-        .get(ENDPOINT.anchor + "/site/" + localStorage.getItem("site"))
+        .get(ENDPOINT.anchor + "/site/" + sessionStorage.getItem("site"))
         .then((result) => {
           setAnchorList(result.data);
           setLoading(false);

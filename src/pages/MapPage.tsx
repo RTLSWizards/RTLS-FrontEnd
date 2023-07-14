@@ -10,12 +10,14 @@ import {
   Spacer,
   Text,
   VStack,
+  useToast,
 } from "@chakra-ui/react";
 import { MapWindow } from "../components/MapWindow";
 import { LegendTable } from "../components/LegendTable";
 import { useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import { FaCircle } from "react-icons/fa";
+import axiosCloud, { ENDPOINT } from "../features/AxiosCloud";
 
 export const MapPage = ({
   getTimeFrequency,
@@ -26,6 +28,13 @@ export const MapPage = ({
   const [showInput, setShowInput] = useState(false);
 
   const [inputTimer, setInputTimer] = useState<number>();
+
+  // Start Recording 
+  const siteName = sessionStorage.getItem("site");
+  const machineName = sessionStorage.getItem("machineName"); 
+  const toast = useToast();
+  const [idHistory, setIdHistory] = useState("");
+
   const handleInputTimer = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputNum = parseInt(e.target.value);
     setInputTimer(inputNum);
@@ -37,6 +46,27 @@ export const MapPage = ({
       localStorage.setItem("refreshingTime", inputTimerInMs.toString());
       location.reload();
     }
+  };
+
+  const handleStartRecording = async () =>{
+    await axiosCloud
+      .post("/startrec", JSON.stringify({ machineName: machineName, siteName: siteName }), {
+        headers: { "Content-Type": "application/json" },
+      })
+      .then((res) => {
+        setIdHistory(sessionStorage.setItem("idHistory",res.data.id));
+      })
+      .catch((err: AxiosError) => {
+        if (err.message == "Network Error" || err.code == "ERR_NETWORK") {
+          toast({
+            status: "error",
+            title: "Server Error",
+            duration: 3000,
+            isClosable: true,
+            position: "top-right",
+          });
+        }
+      });
   };
 
   return (
@@ -95,6 +125,7 @@ export const MapPage = ({
               variant={"solid"}
               colorScheme={"teal"}
               rightIcon={<FaCircle />}
+              onClick={handleStartRecording}
             >
               Start recording
             </Button>

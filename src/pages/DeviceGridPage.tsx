@@ -92,7 +92,7 @@ export const DeviceGridPage = ({
 const DisassociateModal = (props: ConfirmModalProps) => {
   const disassociateAll = async () => {
     await axiosCloud
-      .put(ENDPOINT.anchor + "/all/dissociate/" + localStorage.getItem("site"))
+      .put(ENDPOINT.anchor + "/all/dissociate/" + sessionStorage.getItem("site"))
       .then();
   };
 
@@ -104,7 +104,7 @@ const DisassociateModal = (props: ConfirmModalProps) => {
         <ModalCloseButton />
         <ModalBody>
           Once confirmed, all the anchors will be disassociated from this site:{" "}
-          {localStorage.getItem("site")}
+          {sessionStorage.getItem("site")}
         </ModalBody>
         <ModalFooter>
           <Button colorScheme="yellow" mr={3} onClick={disassociateAll}>
