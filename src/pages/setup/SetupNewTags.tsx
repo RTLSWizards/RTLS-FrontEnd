@@ -19,7 +19,6 @@ import { ErrorNetElement } from "../../components/ErrorNetElement";
 import { ConfirmModal } from "../../components/setup/ConfirmModal";
 
 export const SetupNewTags = ({
-  site,
   setActiveStep,
   activeStep,
 }: {
@@ -33,7 +32,7 @@ export const SetupNewTags = ({
   const [errorNet, setErrorNet] = useState<boolean>(false);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-
+  const site = sessionStorage.getItem("site");
   const toast = useToast();
 
   const getDeviceList = async () => {

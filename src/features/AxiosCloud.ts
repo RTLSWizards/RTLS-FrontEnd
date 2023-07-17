@@ -10,4 +10,6 @@ export const ENDPOINT = {
   anchor: "anchor",
   tag: "tag",
   site: "site",
+  machine: "machine",
+  history: "history",
 };

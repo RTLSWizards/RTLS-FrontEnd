@@ -9,6 +9,9 @@ import {
   Stack,
   useDisclosure,
   useToast,
+  VStack,
+  Text,
+  Img,
 } from "@chakra-ui/react";
 import { ConfirmModal } from "../../components/setup/ConfirmModal";
 import { useEffect, useState } from "react";
@@ -18,8 +21,12 @@ import { AxiosError } from "axios";
 import { AddDeviceCard } from "../../components/setup/AddDeviceCard";
 import { ErrorNetElement } from "../../components/ErrorNetElement";
 
+// ASSETS
+import triangle from "../../assets/triangle.png";
+import square from "../../assets/square.png";
+import pentagon from "../../assets/pentagon.png";
+
 export const SetupNewAnchors = ({
-  site,
   setActiveStep,
   activeStep,
   loading,
@@ -38,6 +45,7 @@ export const SetupNewAnchors = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [deviceList, setDeviceList] = useState<device[]>();
   const [deviceSiteList, setDeviceSiteList] = useState<device[]>();
+  const site = sessionStorage.getItem("site");
 
   const toast = useToast();
 
@@ -123,6 +131,37 @@ export const SetupNewAnchors = ({
                   >
                     {deviceList?.length != 0 ? (
                       <>
+                      <center>
+                      <Box
+                      width={"20rem"}
+                      height={"10rem"}
+                  
+                      boxShadow={"0 4px 12px 0 rgba(0, 0, 0, 0.25)"}
+                      p={3}
+                      borderRadius={5}
+                      mb={5}
+                      mt={5}
+                  >
+                    
+                      <Heading size={"sm"} mb={2}>
+                        Legenda posizionamento ancore:
+                      </Heading>
+                      <VStack spacing={4} align={"stretch"}>
+                        <HStack spacing={3}>
+                          <Text>- 3 ancore: </Text>
+                          <Img src={triangle} width={5} height={5} />
+                        </HStack>
+                        <HStack>
+                          <Text>- 4 ancore: </Text>
+                          <Img src={square} width={5} height={5} />
+                        </HStack>
+                        <HStack>
+                          <Text>- 5 ancore: </Text>
+                          <Img src={pentagon} width={5} height={5} />
+                        </HStack>
+                      </VStack>               
+                    </Box>
+                      </center>
                         <Heading marginBottom={5}>New anchors</Heading>
                         <SimpleGrid columns={4} spacing={5} marginBottom={5}>
                           {deviceList?.map((deviceItem, index) => (

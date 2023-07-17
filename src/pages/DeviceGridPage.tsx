@@ -90,10 +90,16 @@ export const DeviceGridPage = ({
 };
 
 const DisassociateModal = (props: ConfirmModalProps) => {
+  const [loading, setLoading] = useState<boolean>(false);
+
   const disassociateAll = async () => {
+    setLoading(true);
     await axiosCloud
       .put(ENDPOINT.anchor + "/all/dissociate/" + sessionStorage.getItem("site"))
-      .then();
+      .then(()=>{
+        setLoading(false);
+        props.onClose();
+      });
   };
 
   return (
@@ -107,7 +113,7 @@ const DisassociateModal = (props: ConfirmModalProps) => {
           {sessionStorage.getItem("site")}
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="yellow" mr={3} onClick={disassociateAll}>
+          <Button colorScheme="yellow" mr={3} isLoading={loading} onClick={disassociateAll}>
             Confirm
           </Button>
           <Button variant="ghost" onClick={props.onClose}>

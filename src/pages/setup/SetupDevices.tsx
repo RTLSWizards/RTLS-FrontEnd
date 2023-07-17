@@ -17,7 +17,6 @@ import { AxiosError } from "axios";
 import { ErrorNetElement } from "../../components/ErrorNetElement";
 
 export const SetupDevices = ({
-  site,
   setActiveStep,
   activeStep,
 }: {
@@ -29,6 +28,7 @@ export const SetupDevices = ({
   const [deviceList, setDeviceList] = useState<device[]>();
   const [loading, setLoading] = useState<boolean>(false);
   const [errorNet, setErrorNet] = useState<boolean>(false);
+  const site = sessionStorage.getItem("site");
 
   const toast = useToast();
 

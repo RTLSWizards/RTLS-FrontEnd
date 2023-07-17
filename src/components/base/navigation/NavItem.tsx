@@ -30,6 +30,7 @@ export const NavItem = ({
           onClick={() => {
             if (path === "") {
               sessionStorage.removeItem("site");
+              sessionStorage.removeItem("machineName");
               window.location.reload();
             } else {
               navigate(path);
@@ -69,6 +70,7 @@ export const NavItem = ({
               onClick={() => {
                 if (path === "") {
                   sessionStorage.removeItem("site");
+                  sessionStorage.removeItem("machineName");
                   window.location.reload();
                 } else {
                   navigate(path);
@@ -81,6 +83,7 @@ export const NavItem = ({
                 onClick={() => {
                   sessionStorage.removeItem("site");
                   localStorage.removeItem("isSetted");
+                  sessionStorage.removeItem("machineName");
                   window.location.reload();
                 }}
               >

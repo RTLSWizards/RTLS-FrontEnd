@@ -31,6 +31,7 @@ export const AddDeviceCard = ({
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
 
+  const machineName = sessionStorage.getItem("machineName");
   const toast = useToast();
 
   const AddDeviceToSite = async () => {
@@ -42,6 +43,7 @@ export const AddDeviceCard = ({
           macAddress: deviceItem.macAddress,
           type: deviceItem.type,
           sitename: site,
+          machineName: machineName
         })
       )
       .then(() => {

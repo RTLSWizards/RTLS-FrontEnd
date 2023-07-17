@@ -40,3 +40,17 @@ export interface ConfirmModalProps {
 export interface Site {
   name: string;
 }
+
+export interface Machine{
+  name: string;
+  siteName: string;
+}
+
+export interface History{
+  tags: device[];
+  site: Site;
+  machine: Machine;
+  anchors: device[];
+  dateStart: string;
+  dateEnd: string;
+}

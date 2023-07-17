@@ -17,6 +17,7 @@ export const SetupSite = ({
   errorNet: boolean;
   setErrorNet: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+  
   return (
     <SiteGrid
       setActiveStep={setActiveStep}

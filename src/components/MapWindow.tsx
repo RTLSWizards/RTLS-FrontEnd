@@ -33,7 +33,6 @@ export const MapWindow = ({
     crs: L.CRS;
     tagMarker: L.Icon;
     sensorMarker: L.Icon;
-    image: string;
     zoom: number;
     center: L.LatLngExpression | undefined;
     imageBounds: LatLngBoundsExpression;
@@ -51,13 +50,9 @@ export const MapWindow = ({
       iconAnchor: [0, 0],
       popupAnchor: [18, 15],
     }),
-    image: cartesiano,
-    zoom: 1,
-    center: [3, 4],
-    imageBounds: [
-      [0, 0],
-      [7, 8],
-    ],
+    zoom: 6,
+    center: [3.5, 6],
+ 
   };
   const [tagList, setTagList] = useState<device[]>();
   const [anchorList, setAnchorList] = useState<device[]>();
@@ -138,7 +133,7 @@ export const MapWindow = ({
       toast({
         status: "warning",
         title: "Positions error",
-        description: `the ${device.type} ${device.macAddress} has a position (x, y) pointing to 0, please give a value other than 0`,
+        description: `WARNING: The ${device.type} ${device.macAddress} position is set to 0, please change the coordinates. Be sure to provide valid values to ensure proper tracking.`,
         duration: 3000,
         isClosable: true,
         position: "top-right",
@@ -150,7 +145,7 @@ export const MapWindow = ({
   let tagPositionsList: LatLng[] = [];
   const savePositions = (positions: position[]) => {
     for (let index = 0; index < positions.length; index++) {
-      const newPos = new LatLng(positions[index].x, positions[index].y);
+      const newPos = new LatLng( positions[index].y,positions[index].x);
       tagPositionsList.push(newPos);
     }
   };
@@ -180,22 +175,18 @@ export const MapWindow = ({
           center={mapSettings.center}
           zoom={mapSettings.zoom}
           crs={mapSettings.crs}
-          minZoom={6.5}
-          maxZoom={0}
-          zoomSnap={0.0}
+          minZoom={1}
+          maxZoom={6}
+          zoomSnap={0.1}
           dragging={false}
           style={{ width: "100%", height: "90%" }}
         >
-          <ImageOverlay
-            url={mapSettings.image}
-            bounds={mapSettings.imageBounds}
-          />
           {deviceDetail?.positions[0] ? (
             <Marker
               position={
                 new LatLng(
-                  deviceDetail.positions[0].x,
-                  deviceDetail.positions[0].y
+                  deviceDetail.positions[0].y,
+                  deviceDetail.positions[0].x
                 )
               }
               icon={
@@ -212,7 +203,7 @@ export const MapWindow = ({
             <Marker
               key={index}
               position={
-                new LatLng(anchor.positions[0].x, anchor.positions[0].y)
+                new LatLng(anchor.positions[0].y,anchor.positions[0].x)
               }
               icon={mapSettings.sensorMarker}
             >
@@ -229,8 +220,8 @@ export const MapWindow = ({
               <Marker
                 position={
                   new LatLng(
-                    tag.positions[tag.positions.length - 1].x,
-                    tag.positions[tag.positions.length - 1].y
+                    tag.positions[tag.positions.length - 1].y,
+                    tag.positions[tag.positions.length - 1].x
                   )
                 }
                 icon={mapSettings.tagMarker}
@@ -250,10 +241,6 @@ export const MapWindow = ({
       ) : (
         <Skeleton height="90%" />
       )}
-      <Stack>
-        <Box w={"100%"} h={"1px"} backgroundColor={"blackAlpha.700"}></Box>
-        <Text textAlign={"center"}>Y</Text>
-      </Stack>
     </>
   );
 };
