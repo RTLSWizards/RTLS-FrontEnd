@@ -171,6 +171,7 @@ export const MapWindow = ({
       <Text textAlign={"right"}>Next Request: {timer} s</Text>
 
       {!loading ? (
+        <>
         <MapContainer
           center={mapSettings.center}
           zoom={mapSettings.zoom}
@@ -195,6 +196,7 @@ export const MapWindow = ({
                   : mapSettings.tagMarker
               }
             ></Marker>
+            
           ) : (
             <></>
           )}
@@ -207,6 +209,8 @@ export const MapWindow = ({
               }
               icon={mapSettings.sensorMarker}
             >
+                        <HTMLTableRowElement>Y</HTMLTableRowElement>
+
               <Popup>
                 <Link to={`device-grid/${anchor.type}/${anchor.macAddress}`}>
                   {anchor.macAddress}
@@ -238,9 +242,15 @@ export const MapWindow = ({
             </Box>
           ))}
         </MapContainer>
+        <Text textAlign={"center"} p={3}>X</Text>
+        </>
       ) : (
+        <>
         <Skeleton height="90%" />
+        <Text textAlign={"center"} p={3}>X</Text>
+        </>
       )}
     </>
   );
 };
+

@@ -84,44 +84,6 @@ export const SiteGrid = ({
       });
   };
 
-  const getDeviceNullList = async () => {
-    setErrorNet(false);
-    setLoading(true);
-    await axiosCloud
-      .get(ENDPOINT.anchor + "/site/null")
-      .then((res) => {
-        setDeviceList(res.data);
-        setLoading(false);
-      })
-      .then(() => {
-        if (deviceList?.length === 0) {
-          toast({
-            status: "warning",
-            title: "No new anchors for settings",
-            description: "Dissociate anchors from a site to have some devices",
-            variant: "solid",
-            duration: 3000,
-            isClosable: true,
-            position: "top-right",
-          });
-        }
-      })
-      .catch((err: AxiosError) => {
-        setErrorNet(true);
-        setLoading(false);
-        if (err.message == "Network Error" || err.code == "ERR_NETWORK") {
-          toast({
-            status: "error",
-            title: "Server Error",
-            variant: "solid",
-            duration: 3000,
-            isClosable: true,
-            position: "top-right",
-          });
-        }
-      });
-  };
-
   const handleName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
   };
@@ -172,7 +134,6 @@ export const SiteGrid = ({
   useEffect(
     () => {
       getMachineList();
-      getDeviceNullList();
     },[]
   );
 
@@ -209,6 +170,7 @@ export const SiteGrid = ({
                 colorScheme="teal"
                 mb={10}
                 onClick={handleSubmit}
+                isLoading={loading}
               >
                 Confirm
               </Button>
